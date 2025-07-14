@@ -97,7 +97,7 @@ int main(void)
 		HAL_Delay(1);
 		if(HAL_GPIO_ReadPin(Key_GPIO_Port, Key_Pin) == 1) //key pin high level --> key not pressd
 		{
-			//Do nothing
+			HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
 		}
 		else // key pin low level --> key pressed
 		{
