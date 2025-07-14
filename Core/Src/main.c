@@ -94,16 +94,18 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-		HAL_Delay(1);
+
+    /* USER CODE BEGIN 3 */
 		if(HAL_GPIO_ReadPin(Key_GPIO_Port, Key_Pin) == 1) //key pin high level --> key not pressd
 		{
+			HAL_Delay(1);
 			HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
 		}
 		else // key pin low level --> key pressed
 		{
+			HAL_Delay(1);
 			HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET); //LED_Pin RESET --> LED on 
 		}
-    /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
 }
