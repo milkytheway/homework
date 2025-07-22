@@ -33,5 +33,6 @@ hello\usart.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 hello\usart.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 hello\usart.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 hello\usart.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdio.h
-hello\usart.o: ../BSP/inc/bsp_key.h
+hello\usart.o: ..\BSP\key\inc\bsp_key.h
 hello\usart.o: ../Core/Inc/main.h
+hello\usart.o: ..\BSP\led\inc\bsp_led.h

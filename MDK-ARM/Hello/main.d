@@ -32,8 +32,9 @@ hello\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 hello\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 hello\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 hello\main.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdio.h
-hello\main.o: ../BSP/inc/bsp_key.h
+hello\main.o: ..\BSP\key\inc\bsp_key.h
 hello\main.o: ../Core/Inc/main.h
+hello\main.o: ..\BSP\led\inc\bsp_led.h
 hello\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h
 hello\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
 hello\main.o: ../Core/Inc/FreeRTOSConfig.h

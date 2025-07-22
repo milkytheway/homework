@@ -33,5 +33,6 @@ hello\gpio.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 hello\gpio.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 hello\gpio.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 hello\gpio.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdio.h
-hello\gpio.o: ../BSP/inc/bsp_key.h
+hello\gpio.o: ..\BSP\key\inc\bsp_key.h
 hello\gpio.o: ../Core/Inc/main.h
+hello\gpio.o: ..\BSP\led\inc\bsp_led.h

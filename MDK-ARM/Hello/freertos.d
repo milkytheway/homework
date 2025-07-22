@@ -41,8 +41,9 @@ hello\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 hello\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 hello\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 hello\freertos.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdio.h
-hello\freertos.o: ../BSP/inc/bsp_key.h
+hello\freertos.o: ..\BSP\key\inc\bsp_key.h
 hello\freertos.o: ../Core/Inc/main.h
+hello\freertos.o: ..\BSP\led\inc\bsp_led.h
 hello\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h
 hello\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h
 hello\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h

@@ -3,10 +3,10 @@
  * 
  * All Rights Reserved.
  * 
- * @file key.c
+ * @file bsp_led.c
  * 
  * @par dependencies 
- * - key.h
+ * - bsp_led.h
  * - stdio.h
  * - stdint.h
  * 
@@ -24,7 +24,7 @@
  * 
  *****************************************************************************/
 
-#include "bsp_key.h"
+#include "bsp_led.h"
 
 
 
@@ -38,28 +38,35 @@
  * @param[in] uint32_t *key_value : an adress to store the status of the key
  * @param[out] array_vaild_number : The member number of this array.
  * 
- * @return  KEY_status_t.
+ * @return  LED_status_t.
  * 
  * */
- 
-KEY_status_t key_scan(KEY_PRESSE_STATUS_t *key_value){
-	
-	uint32_t count = 0;
-	KEY_PRESSE_STATUS_t key_status_value = KEY_RELEASED;
-	
-	while(count<1000)
-	{
-		// key pressed
-		if(HAL_GPIO_ReadPin(Key_GPIO_Port, Key_Pin) == GPIO_PIN_RESET)
-		{
-			key_status_value = KEY_PRESSED;
-			*key_value = key_status_value;
-			return KEY_OK;
-		}
-		count ++;
-	}
-	
-	*key_value = key_status_value;
-	return KEY_ERRORTIMEOUT;
-}
+ LED_status_t led_on_off(LED_operation_t led_operation)
+ {
+	 LED_status_t func_status = LED_ERROR;
+	 
+	 if(LED_ON == led_operation)
+	 {
+		 // turn on the LED
+		 HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
+		 // A check mechanism should be added here to determine GPIO operation
+		 func_status = LED_OK;
+	 }
+	 
+	 if(LED_OFF == led_operation)
+	 {
+		 // turn off the LED
+		 HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
+		 func_status = LED_OK;
+	 }
+	 
+	 if(LED_TOGGLE == led_operation)
+	 {
+		 // toggle the LED
+		 HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+		 func_status = LED_OK;
+	 }
+	 
+	 return func_status;
+ }
 

@@ -33,6 +33,7 @@ extern "C" {
 /* USER CODE BEGIN Includes */
  #include <stdio.h>
  #include "bsp_key.h"
+ #include "bsp_led.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

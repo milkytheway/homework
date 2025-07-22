@@ -1,5 +1,5 @@
-hello\bsp_key.o: ..\BSP\src\bsp_key.c
-hello\bsp_key.o: ../BSP/inc/bsp_key.h
+hello\bsp_key.o: ..\BSP\key\src\bsp_key.c
+hello\bsp_key.o: ..\BSP\key\inc\bsp_key.h
 hello\bsp_key.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdint.h
 hello\bsp_key.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdio.h
 hello\bsp_key.o: ../Core/Inc/main.h
@@ -33,4 +33,6 @@ hello\bsp_key.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
 hello\bsp_key.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 hello\bsp_key.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 hello\bsp_key.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
-hello\bsp_key.o: ../BSP/inc/bsp_key.h
+hello\bsp_key.o: ..\BSP\key\inc\bsp_key.h
+hello\bsp_key.o: ..\BSP\led\inc\bsp_led.h
+hello\bsp_key.o: ../Core/Inc/main.h

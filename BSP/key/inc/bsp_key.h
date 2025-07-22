@@ -64,6 +64,20 @@ typedef enum
 
 
 //******************************** Declaring ********************************//
+
+/**
+ * @brief Instantiates the bsp_key_handler_t target.
+ * 
+ * Steps:
+ *  1. Adds Core interfaces into bsp_key_driver instance target.
+ *  2. Adds OS interfaces into bsp_key_driver instance target.
+ *  
+ * @param[in] key_value         : Pointer to the target of handler.
+
+ * 
+ * @return KEY_status_t 			  : Status of the function.
+ * 
+ * */
 KEY_status_t key_scan(KEY_PRESSE_STATUS_t *key_value);
 
 //******************************** Declaring ********************************//

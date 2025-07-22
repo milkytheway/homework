@@ -46,6 +46,31 @@
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
 
+//****************Thread_Handler******************//
+osThreadId_t key_TaskHandle;
+const osThreadAttr_t key_Task_attributes = {
+  .name = "key_Task",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityHigh,
+};
+
+
+osThreadId_t led_TaskHandle;
+const osThreadAttr_t led_Task_attributes = {
+  .name = "led_Task",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
+
+//****************Thread_Handler******************//
+
+
+//****************Queue_Handler******************//
+
+QueueHandle_t Key_queue;
+
+//****************Queue_Handler******************//
+
 /* USER CODE END Variables */
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
@@ -59,18 +84,9 @@ const osThreadAttr_t defaultTask_attributes = {
 /* USER CODE BEGIN FunctionPrototypes */
 
 //****************Thread_Func******************//
-osThreadId_t Key_TaskHandle;
-const osThreadAttr_t Key_Task_attributes = {
-  .name = "Key_Task",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityHigh,
-};
-
 /**
  * @brief Key thread function.
  * 
- * Steps:
- *  1. 
  *  
  * @param[in] void *argument        : Pointer to the target of handler.
  * 
@@ -79,12 +95,17 @@ const osThreadAttr_t Key_Task_attributes = {
  * */
 void StartKeyTask(void *argument);
 
+/**
+ * @brief led thread function.
+ * 
+ *  
+ * @param[in] void *argument        : Pointer to the target of handler.
+ * 
+ * @return void.
+ * 
+ * */
+void StartLedTask(void *argument);
 //****************Thread_Func******************//
-
-//****************Queue_Handler******************//
-
-QueueHandle_t Key_queue;
-//****************Queue_Handler******************//
 
 /* USER CODE END FunctionPrototypes */
 
@@ -117,17 +138,18 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
 	// Create a queue capable of containing 10 uint32_t values.
-	Key_queue = xQueueCreate( 10, sizeof( uint32_t ) );
+	Key_queue = xQueueCreate( 10, sizeof( LED_operation_t ) );
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
   /* creation of defaultTask */
-  defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+  //defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
 	
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
-	Key_TaskHandle = osThreadNew(StartKeyTask, NULL, &Key_Task_attributes);
+	key_TaskHandle = osThreadNew(StartKeyTask, NULL, &key_Task_attributes);
+	led_TaskHandle = osThreadNew(StartLedTask, NULL, &led_Task_attributes);
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_EVENTS */
@@ -147,33 +169,36 @@ void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
   /* Infinite loop */
+	//vTaskSuspend(defaultTaskHandle);
   for(;;)
   {
-		printf("Default_task_running\r\n");
-		uint32_t received_value;
-		if( Key_queue != 0 )
-			{
-				// Receive a message on the created queue.  Block the task if a
-				// message is not immediately available.
-				if( xQueueReceive( Key_queue, &( received_value ), portMAX_DELAY ) )
-				{
-					printf("received value: [%d]\n",received_value);
-				}
-			}
-		osDelay(100);
   }
   /* USER CODE END StartDefaultTask */
 }
 
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
+
+/**
+ * @brief Detect key press event, send data to queue if key pressed
+ * 
+ * Steps:
+ *  1, detect key pressed or not, within a shrot period
+ *  2, if pressed, 
+ * 
+ * @param[in]  void *argument        : Pointer to the target of handler.
+ * @param[out] void
+ * 
+ * @return 		 void.
+ * 
+ * */
 void StartKeyTask(void *argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
 	
-	KEY_status_t key_ret 					 = KEY_OK;
-	KEY_PRESSE_STATUS_t key_status = KEY_RELEASED;
-	uint32_t counter_tick = 0;
+	KEY_status_t key_ret 					 		= KEY_OK;
+	KEY_PRESSE_STATUS_t key_status 		= KEY_RELEASED;
+	LED_operation_t operation 				= LED_TOGGLE;
 	
 	if( Key_queue == 0 )
 	{
@@ -183,8 +208,6 @@ void StartKeyTask(void *argument)
   /* Infinite loop */
   for(;;)
   {
-		uint32_t tick = osKernelGetTickCount();
-		counter_tick ++;
 		
 		key_ret = key_scan(&key_status);
 		
@@ -192,10 +215,8 @@ void StartKeyTask(void *argument)
 		{
 			if(KEY_PRESSED == key_status)
 			{
-				printf("[%d]Key pressed\n", tick);
-				
 				//check if queue send successful
-				if(pdPASS == xQueueSendToFront(Key_queue, &counter_tick, 0))
+				if(pdPASS == xQueueSendToFront(Key_queue, &operation, 0))
 				{
 					printf("send successfully\r\n");
 				}
@@ -207,6 +228,48 @@ void StartKeyTask(void *argument)
 		}
 		osDelay(100);
   }
+}
+
+/**
+ * @brief Implementation of led thread
+ * 
+ * Steps:
+ *  1, detect key pressed or not, within a shrot period
+ *  2, if pressed, 
+ * 
+ * @param[in] uint32_t *key_value : an adress to store the status of the key
+ * @param[out] array_vaild_number : The member number of this array.
+ * 
+ * @return  LED_status_t.
+ * 
+ * */
+
+void StartLedTask(void *argument)
+{
+	
+	LED_status_t 		led_ret 				= LED_OK;
+	LED_operation_t led_operation 	= LED_ON;
+	
+	for(;;)
+	{
+		printf("led_thread_running\r\n");
+		if( Key_queue != 0 )
+			{
+				// Receive a message on the created queue.  Block the task if a
+				// message is not immediately available.
+				if( xQueueReceive( Key_queue, &( led_operation ), portMAX_DELAY ) )
+				{
+					printf("received\r\n");
+					led_ret = led_on_off(led_operation);
+					
+					if(LED_OK == led_ret)
+					{
+						printf("led_operation_success\r\n");
+					}
+				}
+			}
+		osDelay(100);
+		}
 }
 /* USER CODE END Application */
 
