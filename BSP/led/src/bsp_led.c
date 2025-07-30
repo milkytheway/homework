@@ -67,6 +67,17 @@
 		 func_status = LED_OK;
 	 }
 	 
+	 if(LED_BLINK == led_operation)
+	 {
+		 //blink LED 3 times
+		 for(int i=0; i<6; i++)
+		 {
+			 HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+			 
+			 HAL_Delay(500);
+		 }
+	 }
+	 
 	 return func_status;
  }
 

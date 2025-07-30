@@ -57,8 +57,13 @@ typedef enum
 typedef enum
 {
 	KEY_PRESSED						= 0,
-	KEY_RELEASED					= 1
+	KEY_RELEASED					= 1,
+	KEY_SHORT_PRESSED			= 2,
+	KEY_LONG_PRESSED			= 3
 } KEY_PRESSE_STATUS_t;
+
+
+
 
 //******************************** Defines **********************************//
 
@@ -82,6 +87,20 @@ KEY_status_t key_scan(KEY_PRESSE_STATUS_t *key_value);
 
 //******************************** Declaring ********************************//
 
+/**
+ * @brief Instantiates the bsp_key_handler_t target.
+ * 
+ * Steps:
+ *  1. 
+ *  
+ * @param[in] key_value         : Pointer to the target of handler.
+ * @param[in] threshold         : threshold to determine short or long, short < thresh
+ * 
+ * @return KEY_status_t 			  : Status of the function.
+ * 
+ * */
 
+KEY_status_t key_scan_time(KEY_PRESSE_STATUS_t *key_value, 
+													 uint32_t 					  threshold);
 #endif // End of __BSP_KEY_H__
 

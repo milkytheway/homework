@@ -55,9 +55,10 @@ typedef enum
 
 typedef enum
 {
-  LED_ON                = 0,         /*      				LED on 							  */
-  LED_OFF               = 1,         /*      				LED off							  */
-	LED_TOGGLE						= 2          /*      				LED toggle		  		  */
+  LED_ON                = 0,         	/*      				LED on 							  */
+  LED_OFF               = 1,         	/*      				LED off							  */
+	LED_TOGGLE						= 2,          /*      				LED toggle		  		  */
+	LED_BLINK							= 3           /*      				LED BLINK		  		  	*/
 } LED_operation_t;
 
 //******************************** Defines **********************************//

@@ -143,12 +143,12 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the thread(s) */
   /* creation of defaultTask */
-  //defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+  defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
 	
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
-	key_TaskHandle = osThreadNew(StartKeyTask, NULL, &key_Task_attributes);
+	//key_TaskHandle = osThreadNew(StartKeyTask, NULL, &key_Task_attributes);
 	led_TaskHandle = osThreadNew(StartLedTask, NULL, &led_Task_attributes);
   /* USER CODE END RTOS_THREADS */
 
@@ -169,9 +169,43 @@ void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
   /* Infinite loop */
-	//vTaskSuspend(defaultTaskHandle);
+	KEY_status_t 						key_func_ret 			=				KEY_OK;
+	KEY_PRESSE_STATUS_t			key_status   			=				KEY_RELEASED;
+	LED_operation_t 				operation 				= 			LED_TOGGLE;
   for(;;)
   {
+		printf("default task thread running\r\n");
+		
+		key_func_ret = key_scan_time(&key_status, 1000);
+		
+		if(KEY_OK == key_func_ret)
+		{
+			//判断短按
+			if(key_status == KEY_SHORT_PRESSED)
+			{
+				printf("short pressed at [%d] tick \r\n", HAL_GetTick());
+				operation = LED_TOGGLE;
+				
+				if(pdPASS == xQueueSendToFront(Key_queue, &operation, 0))
+				{
+					printf("send successfully\r\n");
+				}
+			}
+			//判断长按
+			
+			if(KEY_LONG_PRESSED == key_status)
+			{
+				printf("key long pressed at [%d] tick \r\n", HAL_GetTick());
+				operation = LED_BLINK;
+				
+				if(pdPASS == xQueueSendToFront(Key_queue, &operation, 0))
+				{
+					printf("send successfully\r\n");
+				}
+			}
+		}
+		
+		osDelay(100);
   }
   /* USER CODE END StartDefaultTask */
 }

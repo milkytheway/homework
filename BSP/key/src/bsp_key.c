@@ -42,7 +42,8 @@
  * 
  * */
  
-KEY_status_t key_scan(KEY_PRESSE_STATUS_t *key_value){
+KEY_status_t key_scan(KEY_PRESSE_STATUS_t *key_value)
+{
 	
 	uint32_t count = 0;
 	KEY_PRESSE_STATUS_t key_status_value = KEY_RELEASED;
@@ -63,3 +64,66 @@ KEY_status_t key_scan(KEY_PRESSE_STATUS_t *key_value){
 	return KEY_ERRORTIMEOUT;
 }
 
+
+
+/**
+ * @brief Instantiates the bsp_key_handler_t target.
+ * 
+ * Steps:
+ *  1.  check if the key is pressed
+ *  1.1 if the key is pressed, check if it is short pressed.
+ *  1.2 if the key is long pressed
+ *  
+ * @param[in] key_value         : Pointer to the target of handler.
+ * @param[in] threshold         : threshold to determine short or long, short < thresh
+ * 
+ * @return KEY_status_t 			  : Status of the function.
+ * 
+ * */
+
+
+KEY_status_t key_scan_time(KEY_PRESSE_STATUS_t *key_value, 
+													 uint32_t 					  threshold)
+{
+	KEY_status_t 				key_func_ret 				= 	KEY_OK;
+	KEY_PRESSE_STATUS_t key_value_temp 			= 	KEY_RELEASED;
+	uint32_t 		 				counter_tick 				= 	0;
+	
+	key_func_ret = key_scan(&key_value_temp);
+	
+	//task enter critical
+	if(KEY_OK == key_func_ret)
+	{
+		if(KEY_PRESSED == key_value_temp)
+		{
+			counter_tick = HAL_GetTick();
+			
+			while(HAL_GetTick() < counter_tick + threshold)
+			;
+			
+			//get key status agian to know whether the key is still pressed
+			key_func_ret = key_scan(&key_value_temp);
+			
+			if(KEY_RELEASED == key_value_temp)
+			{
+				//this is short press
+				*key_value = KEY_SHORT_PRESSED;
+				return KEY_OK;
+			}
+			else
+			{
+				*key_value = KEY_LONG_PRESSED;
+				
+				//wait until key released
+				KEY_status_t ret;
+				do {
+						ret = key_scan(&key_value_temp);
+						if (ret != KEY_OK) break;
+				} while (key_value_temp == KEY_PRESSED);
+				
+				return KEY_OK;
+			}
+		}
+	}
+	return key_func_ret;
+}
