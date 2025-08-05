@@ -1,0 +1,218 @@
+*** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Keil_v5\ARM\ARM-COMPILER-506\Bin'
+Build target 'Hello'
+assembling startup_stm32f411xe.s...
+compiling bsp_key_irq.c...
+../BSP/led/inc/bsp_led.h(113): error:  #130: expected a "{"
+  LED_status_t led_callback_for_TIM2(void);
+../BSP/key_irq/inc/bsp_key_irq.h(51): warning:  #12-D: parsing restarts here after previous syntax error
+  {
+../BSP/key_irq/inc/bsp_key_irq.h(52): error:  #20: identifier "KEY_OK" is undefined
+    KEY_OK                = 0,         /* Operation completed successfully.  */
+../BSP/key_irq/inc/bsp_key_irq.h(53): error:  #20: identifier "KEY_ERROR" is undefined
+    KEY_ERROR             = 1,         /* Run-time error without case matched*/
+../BSP/key_irq/inc/bsp_key_irq.h(54): error:  #20: identifier "KEY_ERRORTIMEOUT" is undefined
+    KEY_ERRORTIMEOUT      = 2,         /* Operation failed with timeout      */
+../BSP/key_irq/inc/bsp_key_irq.h(55): error:  #20: identifier "KEY_ERRORRESOURCE" is undefined
+    KEY_ERRORRESOURCE     = 3,         /* Resource not available.            */
+../BSP/key_irq/inc/bsp_key_irq.h(56): error:  #20: identifier "KEY_ERRORPARAMETER" is undefined
+    KEY_ERRORPARAMETER    = 4,         /* Parameter error.                   */
+../BSP/key_irq/inc/bsp_key_irq.h(57): error:  #20: identifier "KEY_ERRORNOMEMORY" is undefined
+    KEY_ERRORNOMEMORY     = 5,         /* Out of memory.                     */
+../BSP/key_irq/inc/bsp_key_irq.h(58): error:  #20: identifier "KEY_ERRORISR" is undefined
+    KEY_ERRORISR          = 6,         /* Not allowed in ISR context         */
+../BSP/key_irq/inc/bsp_key_irq.h(59): error:  #20: identifier "KEY_RESERVED" is undefined
+    KEY_RESERVED          = 0x7FFFFFFF /* Reserved                           */
+../BSP/key_irq/inc/bsp_key_irq.h(60): error:  #65: expected a ";"
+  } KEY_status_t;
+../BSP/key_irq/inc/bsp_key_irq.h(60): warning:  #940-D: missing return statement at end of non-void function "led_on_off_timer_irq" 
+  } KEY_status_t;
+../BSP/key_irq/inc/bsp_key_irq.h(60): error:  #77-D: this declaration has no storage class or type specifier
+  } KEY_status_t;
+../BSP/key_irq/inc/bsp_key_irq.h(101): error:  #757: variable "KEY_status_t"  is not a type name
+  KEY_status_t key_scan(KEY_PRESSE_STATUS_t *key_value);
+../BSP/key_irq/inc/bsp_key_irq.h(118): error:  #757: variable "KEY_status_t"  is not a type name
+  KEY_status_t key_scan_time(KEY_PRESSE_STATUS_t *key_value, 
+..\BSP\key_irq\src\bsp_key_irq.c(45): error:  #757: variable "KEY_status_t"  is not a type name
+  KEY_status_t key_scan(KEY_PRESSE_STATUS_t *key_value)
+..\BSP\key_irq\src\bsp_key_irq.c(58): error:  #20: identifier "KEY_OK" is undefined
+  			return KEY_OK;
+..\BSP\key_irq\src\bsp_key_irq.c(64): error:  #20: identifier "KEY_ERRORTIMEOUT" is undefined
+  	return KEY_ERRORTIMEOUT;
+..\BSP\key_irq\src\bsp_key_irq.c(85): error:  #757: variable "KEY_status_t"  is not a type name
+  KEY_status_t key_scan_time(KEY_PRESSE_STATUS_t *key_value, 
+..\BSP\key_irq\src\bsp_key_irq.c(88): warning:  #174-D: expression has no effect
+  	KEY_status_t 				key_func_ret 				= 	KEY_OK;
+..\BSP\key_irq\src\bsp_key_irq.c(88): error:  #65: expected a ";"
+  	KEY_status_t 				key_func_ret 				= 	KEY_OK;
+..\BSP\key_irq\src\bsp_key_irq.c(92): error:  #20: identifier "key_func_ret" is undefined
+  	key_func_ret = key_scan(&key_value_temp);
+..\BSP\key_irq\src\bsp_key_irq.c(95): error:  #20: identifier "KEY_OK" is undefined
+  	if(KEY_OK == key_func_ret)
+..\BSP\key_irq\src\bsp_key_irq.c(118): warning:  #174-D: expression has no effect
+  				KEY_status_t ret;
+..\BSP\key_irq\src\bsp_key_irq.c(118): error:  #65: expected a ";"
+  				KEY_status_t ret;
+..\BSP\key_irq\src\bsp_key_irq.c(120): error:  #20: identifier "ret" is undefined
+  						ret = key_scan(&key_value_temp);
+..\BSP\key_irq\src\bsp_key_irq.c: 4 warnings, 22 errors
+compiling usart.c...
+../BSP/led/inc/bsp_led.h(113): error:  #130: expected a "{"
+  LED_status_t led_callback_for_TIM2(void);
+../Core/Src/usart.c(32): warning:  #12-D: parsing restarts here after previous syntax error
+  {
+../Core/Src/usart.c(41): error:  #20: identifier "huart1" is undefined
+    huart1.Instance = USART1;
+../Core/Src/usart.c(51): warning:  #223-D: function "Error_Handler" declared implicitly
+      Error_Handler();
+../Core/Src/usart.c(57): warning:  #940-D: missing return statement at end of non-void function "led_on_off_timer_irq" 
+  }
+../Core/Src/usart.c(127): error:  #20: identifier "huart1" is undefined
+       HAL_UART_Transmit(&huart1, (uint8_t *)&ch,1,0xFFFF);
+../Core/Src/usart.c: 3 warnings, 3 errors
+compiling stm32f4xx_it.c...
+../BSP/led/inc/bsp_led.h(113): error:  #130: expected a "{"
+  LED_status_t led_callback_for_TIM2(void);
+../Core/Src/stm32f4xx_it.c(72): warning:  #12-D: parsing restarts here after previous syntax error
+  {
+../Core/Src/stm32f4xx_it.c(185): error:  #20: identifier "htim1" is undefined
+    HAL_TIM_IRQHandler(&htim1);
+../Core/Src/stm32f4xx_it.c(199): error:  #20: identifier "htim2" is undefined
+    HAL_TIM_IRQHandler(&htim2);
+../Core/Src/stm32f4xx_it.c: 1 warning, 3 errors
+compiling main.c...
+../BSP/led/inc/bsp_led.h(113): error:  #130: expected a "{"
+  LED_status_t led_callback_for_TIM2(void);
+../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h(168): warning:  #12-D: parsing restarts here after previous syntax error
+  {
+../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h(173): error:  #20: identifier "ulBASEPRI" is undefined
+  		msr basepri, ulBASEPRI
+../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h(175): warning:  #940-D: missing return statement at end of non-void function "led_on_off_timer_irq" 
+  }
+../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h(223): error:  #20: identifier "BaseType_t" is undefined
+  static portFORCE_INLINE BaseType_t xPortIsInsideInterrupt( void )
+../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h(226): error:  #20: identifier "BaseType_t" is undefined
+  BaseType_t xReturn;
+../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h(236): error:  #20: identifier "BaseType_t" is undefined
+  		xReturn = pdFALSE;
+../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h(236): error:  #18: expected a ")"
+  		xReturn = pdFALSE;
+../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h(240): error:  #20: identifier "BaseType_t" is undefined
+  		xReturn = pdTRUE;
+../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h(240): error:  #18: expected a ")"
+  		xReturn = pdTRUE;
+../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h(117): error:  #20: identifier "StackType_t" is undefined
+  		StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters ) PRIVILEGED_FUNCTION;
+../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h(117): error:  #20: identifier "StackType_t" is undefined
+  		StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters ) PRIVILEGED_FUNCTION;
+../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h(117): error:  #20: identifier "TaskFunction_t" is undefined
+  		StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters ) PRIVILEGED_FUNCTION;
+../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h(173): error:  #20: identifier "BaseType_t" is undefined
+  BaseType_t xPortStartScheduler( void ) PRIVILEGED_FUNCTION;
+../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h(1066): error:  #20: identifier "TickType_t" is undefined
+  	TickType_t xDummy2;
+../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h(1080): error:  #20: identifier "TickType_t" is undefined
+  	TickType_t xDummy2;
+../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h(1091): error:  #20: identifier "UBaseType_t" is undefined
+  	UBaseType_t uxDummy2;
+../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h(1119): error:  #20: identifier "UBaseType_t" is undefined
+  	UBaseType_t			uxDummy5;
+../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h(1129): error:  #20: identifier "UBaseType_t" is undefined
+  		UBaseType_t		uxDummy10[ 2 ];
+../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h(1132): error:  #20: identifier "UBaseType_t" is undefined
+  		UBaseType_t		uxDummy12[ 2 ];
+../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h(1183): error:  #20: identifier "UBaseType_t" is undefined
+  		UBaseType_t uxDummy2;
+../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h(1187): error:  #20: identifier "UBaseType_t" is undefined
+  	UBaseType_t uxDummy4[ 3 ];
+../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h(1199): error:  #20: identifier "UBaseType_t" is undefined
+  		UBaseType_t uxDummy8;
+../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h(1222): error:  #20: identifier "TickType_t" is undefined
+  	TickType_t xDummy1;
+../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h(1226): error:  #20: identifier "UBaseType_t" is undefined
+  		UBaseType_t uxDummy3;
+../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h(1253): error:  #20: identifier "TickType_t" is undefined
+  	TickType_t			xDummy3;
+../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h(1255): error:  #20: identifier "TaskFunction_t" is undefined
+  	TaskFunction_t		pvDummy6;
+../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h(1257): error:  #20: identifier "UBaseType_t" is undefined
+  		UBaseType_t		uxDummy7;
+../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h(1283): error:  #20: identifier "UBaseType_t" is undefined
+  		UBaseType_t uxDummy4;
+../Middlewares/Third_Party/FreeRTOS/Source/include/list.h(143): error:  #20: identifier "TickType_t" is undefined
+  	configLIST_VOLATILE TickType_t xItemValue;			/*< The value being listed.  In most cases this is used to sort the list in descending order. */
+../Middlewares/Third_Party/FreeRTOS/Source/include/list.h(155): error:  #20: identifier "TickType_t" is undefined
+  	configLIST_VOLATILE TickType_t xItemValue;
+../Middlewares/Third_Party/FreeRTOS/Source/include/list.h(167): error:  #20: identifier "UBaseType_t" is undefined
+  	volatile UBaseType_t uxNumberOfItems;
+../Core/Src/main.c: 2 warnings, 30 errors
+compiling stm32f4xx_hal_msp.c...
+../BSP/led/inc/bsp_led.h(113): error:  #130: expected a "{"
+  LED_status_t led_callback_for_TIM2(void);
+../Core/Src/stm32f4xx_hal_msp.c(64): warning:  #12-D: parsing restarts here after previous syntax error
+  {
+../Core/Src/stm32f4xx_hal_msp.c(79): warning:  #940-D: missing return statement at end of non-void function "led_on_off_timer_irq" 
+  }
+../Core/Src/stm32f4xx_hal_msp.c: 2 warnings, 1 error
+compiling bsp_led.c...
+../BSP/led/inc/bsp_led.h(113): error:  #130: expected a "{"
+  LED_status_t led_callback_for_TIM2(void);
+..\BSP\led\src\bsp_led.c(52): warning:  #12-D: parsing restarts here after previous syntax error
+   {
+..\BSP\led\src\bsp_led.c(104): error:  #247: function "led_on_off_timer_irq"  has already been defined
+   LED_status_t led_on_off_timer_irq(LED_operation_t led_operation)
+..\BSP\led\src\bsp_led.c(108): error:  #20: identifier "g_blink_times" is undefined
+  		g_blink_times = 1;
+..\BSP\led\src\bsp_led.c(109): error:  #20: identifier "g_blink_order" is undefined
+  		g_blink_order = 0;
+..\BSP\led\src\bsp_led.c(114): error:  #20: identifier "g_blink_times" is undefined
+  		g_blink_times = 10;
+..\BSP\led\src\bsp_led.c(115): error:  #20: identifier "g_blink_order" is undefined
+  		g_blink_order = 0;
+..\BSP\led\src\bsp_led.c(117): warning:  #940-D: missing return statement at end of non-void function "led_on_off_timer_irq" 
+  }
+..\BSP\led\src\bsp_led.c(135): warning:  #940-D: missing return statement at end of non-void function "led_callback_for_TIM2" 
+  }
+..\BSP\led\src\bsp_led.c: 3 warnings, 6 errors
+compiling tim.c...
+../BSP/led/inc/bsp_led.h(113): error:  #130: expected a "{"
+  LED_status_t led_callback_for_TIM2(void);
+../Core/Src/tim.c(31): warning:  #12-D: parsing restarts here after previous syntax error
+  {
+../Core/Src/tim.c(43): error:  #20: identifier "htim2" is undefined
+    htim2.Instance = TIM2;
+../Core/Src/tim.c(51): warning:  #223-D: function "Error_Handler" declared implicitly
+      Error_Handler();
+../Core/Src/tim.c(56): warning:  #223-D: function "Error_Handler" declared implicitly
+      Error_Handler();
+../Core/Src/tim.c(62): warning:  #223-D: function "Error_Handler" declared implicitly
+      Error_Handler();
+../Core/Src/tim.c(68): warning:  #940-D: missing return statement at end of non-void function "led_on_off_timer_irq" 
+  }
+../Core/Src/tim.c: 5 warnings, 2 errors
+compiling gpio.c...
+../BSP/led/inc/bsp_led.h(113): error:  #130: expected a "{"
+  LED_status_t led_callback_for_TIM2(void);
+../Core/Src/gpio.c(43): warning:  #12-D: parsing restarts here after previous syntax error
+  {
+../Core/Src/gpio.c(72): warning:  #940-D: missing return statement at end of non-void function "led_on_off_timer_irq" 
+  }
+../Core/Src/gpio.c: 2 warnings, 1 error
+compiling freertos.c...
+../BSP/led/inc/bsp_led.h(113): error:  #130: expected a "{"
+  LED_status_t led_callback_for_TIM2(void);
+../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h(54): warning:  #12-D: parsing restarts here after previous syntax error
+  typedef struct {
+../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h(57): warning:  #940-D: missing return statement at end of non-void function "led_on_off_timer_irq" 
+  } osVersion_t;
+../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h(55): warning:  #177-D: variable "api"  was declared but never referenced
+    uint32_t                       api;   ///< API version (major.minor.rev: mmnnnrrrr dec).
+../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h(56): warning:  #177-D: variable "kernel"  was declared but never referenced
+    uint32_t                    kernel;   ///< Kernel version (major.minor.rev: mmnnnrrrr dec).
+../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h(57): error:  #77-D: this declaration has no storage class or type specifier
+  } osVersion_t;
+../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h(294): error:  #757: variable "osVersion_t"  is not a type name
+  osStatus_t osKernelGetInfo (osVersion_t *version, char *id_buf, uint32_t id_size);
+../Core/Src/freertos.c: 4 warnings, 3 errors
+"Hello\Hello.axf" - 71 Error(s), 26 Warning(s).
+Target not created.
+Build Time Elapsed:  00:00:06
