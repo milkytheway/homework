@@ -1,0 +1,9 @@
+hello\elog.o: ..\Middlewares\easylogger\src\elog.c
+hello\elog.o: ..\Middlewares\easylogger\inc\elog.h
+hello\elog.o: ..\Middlewares\easylogger\inc\elog_cfg.h
+hello\elog.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdint.h
+hello\elog.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stddef.h
+hello\elog.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdbool.h
+hello\elog.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\string.h
+hello\elog.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdarg.h
+hello\elog.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdio.h
