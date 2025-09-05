@@ -1,0 +1,9 @@
+07_freertos_uart1\elog.o: ..\Middlewares\easylogger\src\elog.c
+07_freertos_uart1\elog.o: ..\Middlewares\easylogger\inc\elog.h
+07_freertos_uart1\elog.o: ..\Middlewares\easylogger\inc\elog_cfg.h
+07_freertos_uart1\elog.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdint.h
+07_freertos_uart1\elog.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stddef.h
+07_freertos_uart1\elog.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdbool.h
+07_freertos_uart1\elog.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\string.h
+07_freertos_uart1\elog.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdarg.h
+07_freertos_uart1\elog.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdio.h
