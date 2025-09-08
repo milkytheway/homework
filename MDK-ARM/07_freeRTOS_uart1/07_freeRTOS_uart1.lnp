@@ -3,15 +3,10 @@
 "07_freertos_uart1\main.o"
 "07_freertos_uart1\gpio.o"
 "07_freertos_uart1\freertos.o"
-"07_freertos_uart1\adc.o"
-"07_freertos_uart1\dma.o"
 "07_freertos_uart1\usart.o"
 "07_freertos_uart1\stm32f4xx_it.o"
 "07_freertos_uart1\stm32f4xx_hal_msp.o"
 "07_freertos_uart1\stm32f4xx_hal_timebase_tim.o"
-"07_freertos_uart1\stm32f4xx_hal_adc.o"
-"07_freertos_uart1\stm32f4xx_hal_adc_ex.o"
-"07_freertos_uart1\stm32f4xx_ll_adc.o"
 "07_freertos_uart1\stm32f4xx_hal_rcc.o"
 "07_freertos_uart1\stm32f4xx_hal_rcc_ex.o"
 "07_freertos_uart1\stm32f4xx_hal_flash.o"
@@ -46,6 +41,7 @@
 "07_freertos_uart1\elog_buf.o"
 "07_freertos_uart1\elog_utils.o"
 "07_freertos_uart1\elog_port.o"
+"07_freertos_uart1\uart_parse_task.o"
 --library_type=microlib --strict --scatter "07_freeRTOS_uart1\07_freeRTOS_uart1.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

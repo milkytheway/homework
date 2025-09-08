@@ -23,9 +23,6 @@
 07_freertos_uart1\stm32f4xx_it.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h
 07_freertos_uart1\stm32f4xx_it.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h
 07_freertos_uart1\stm32f4xx_it.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h
-07_freertos_uart1\stm32f4xx_it.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h
-07_freertos_uart1\stm32f4xx_it.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_adc.h
-07_freertos_uart1\stm32f4xx_it.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h
 07_freertos_uart1\stm32f4xx_it.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h
 07_freertos_uart1\stm32f4xx_it.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h
 07_freertos_uart1\stm32f4xx_it.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h
@@ -35,11 +32,11 @@
 07_freertos_uart1\stm32f4xx_it.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 07_freertos_uart1\stm32f4xx_it.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 07_freertos_uart1\stm32f4xx_it.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdio.h
-07_freertos_uart1\stm32f4xx_it.o: ..\Middlewares\RTT\SEGGER_RTT.h
-07_freertos_uart1\stm32f4xx_it.o: ..\Middlewares\RTT\SEGGER_RTT_Conf.h
+07_freertos_uart1\stm32f4xx_it.o: ../Middlewares/RTT/SEGGER_RTT.h
+07_freertos_uart1\stm32f4xx_it.o: ../Middlewares/RTT/SEGGER_RTT_Conf.h
 07_freertos_uart1\stm32f4xx_it.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdlib.h
 07_freertos_uart1\stm32f4xx_it.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdarg.h
-07_freertos_uart1\stm32f4xx_it.o: ..\Middlewares\easylogger\inc\elog.h
-07_freertos_uart1\stm32f4xx_it.o: ..\Middlewares\easylogger\inc\elog_cfg.h
+07_freertos_uart1\stm32f4xx_it.o: ../Middlewares/easylogger/inc/elog.h
+07_freertos_uart1\stm32f4xx_it.o: ../Middlewares/easylogger/inc/elog_cfg.h
 07_freertos_uart1\stm32f4xx_it.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdbool.h
 07_freertos_uart1\stm32f4xx_it.o: ../Core/Inc/stm32f4xx_it.h

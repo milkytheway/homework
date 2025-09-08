@@ -19,8 +19,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "cmsis_os.h"
-#include "adc.h"
-#include "dma.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -41,7 +39,7 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-
+#define TAG             "main"
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -53,9 +51,8 @@
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 void MX_FREERTOS_Init(void);
-void app_elog_init(void);
 /* USER CODE BEGIN PFP */
-
+void app_elog_init(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -105,11 +102,20 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_DMA_Init();
   MX_USART1_UART_Init();
-  MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
 	app_elog_init();
+
+  uint8_t aRxBuffer[1] = {0x00};
+  if (HAL_OK == HAL_UART_Receive_IT(&huart1, (uint8_t *)&aRxBuffer, sizeof(aRxBuffer)))
+  {
+    /* Start UART receive interrupt */
+    elog_info(TAG, "Start UART receive interrupt successfully!");
+  }
+  else
+  {
+    elog_error(TAG, "Start UART receive interrupt failed!");
+  }
   /* USER CODE END 2 */
 
   /* Init scheduler */
