@@ -21,8 +21,7 @@
 #include "usart.h"
 
 /* USER CODE BEGIN 0 */
-
-#include <stdio.h> //����ͷ�ļ�
+#include <stdio.h>
  
  #ifdef __GNUC__
      #define PUTCHAR_PROTOTYPE int _io_putchar(int ch)
@@ -134,10 +133,5 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 }
 
 /* USER CODE BEGIN 1 */
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
-  if(huart->Instance == USART1) // Check if the interrupt is from USART1
-  {
-  }
-}
+
 /* USER CODE END 1 */

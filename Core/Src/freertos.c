@@ -65,7 +65,14 @@ osThreadId_t task_uart_rec_AHandle;
 const osThreadAttr_t task_uart_rec_A_attributes = {
   .name = "task_uart_rec_A",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityBelowNormal,
+  .priority = (osPriority_t) osPriorityNormal,
+};
+/* Definitions for task_bsp_uart_d */
+osThreadId_t task_bsp_uart_dHandle;
+const osThreadAttr_t task_bsp_uart_d_attributes = {
+  .name = "task_bsp_uart_d",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
 };
 
 /* Private function prototypes -----------------------------------------------*/
@@ -74,6 +81,7 @@ const osThreadAttr_t task_uart_rec_A_attributes = {
 
 void StartDefaultTask(void *argument);
 void uart_rec_A_func(void *argument);
+void uart_driver_func(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -109,6 +117,9 @@ void MX_FREERTOS_Init(void) {
   /* creation of task_uart_rec_A */
   task_uart_rec_AHandle = osThreadNew(uart_rec_A_func, NULL, &task_uart_rec_A_attributes);
 
+  /* creation of task_bsp_uart_d */
+  task_bsp_uart_dHandle = osThreadNew(uart_driver_func, NULL, &task_bsp_uart_d_attributes);
+
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
@@ -132,7 +143,8 @@ void StartDefaultTask(void *argument)
   /* Infinite loop */
   for(;;)
   {
-  //osDelay(1000);
+    elog_info(TAG, "defaultTask is running...");
+    osDelay(1000);
   }
 
   
@@ -146,8 +158,8 @@ void StartDefaultTask(void *argument)
 * @retval None
 */
 /* USER CODE END Header_uart_rec_A_func */
-//void uart_rec_A_func(void *argument)
-//{
+__weak void uart_rec_A_func(void *argument)
+{
   /* USER CODE BEGIN uart_rec_A_func */
 //   /* Infinite loop */
 //   for(;;)
@@ -155,7 +167,25 @@ void StartDefaultTask(void *argument)
 //     osDelay(1);
 //   }
   /* USER CODE END uart_rec_A_func */
-//}
+}
+
+/* USER CODE BEGIN Header_uart_driver_func */
+/**
+* @brief Function implementing the task_bsp_uart_d thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_uart_driver_func */
+__weak void uart_driver_func(void *argument)
+{
+  /* USER CODE BEGIN uart_driver_func */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END uart_driver_func */
+}
 
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */

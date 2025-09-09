@@ -106,16 +106,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
 	app_elog_init();
 
-  uint8_t aRxBuffer[1] = {0x00};
-  if (HAL_OK == HAL_UART_Receive_IT(&huart1, (uint8_t *)&aRxBuffer, sizeof(aRxBuffer)))
-  {
-    /* Start UART receive interrupt */
-    elog_info(TAG, "Start UART receive interrupt successfully!");
-  }
-  else
-  {
-    elog_error(TAG, "Start UART receive interrupt failed!");
-  }
+
   /* USER CODE END 2 */
 
   /* Init scheduler */
