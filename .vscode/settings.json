@@ -4,6 +4,7 @@
         "usart.h": "c",
         "stdio.h": "c",
         "bsp_uart_driver.h": "c",
-        "main.h": "c"
+        "main.h": "c",
+        "stdint.h": "c"
     }
 }

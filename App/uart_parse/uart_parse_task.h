@@ -14,8 +14,8 @@
   *
   ******************************************************************************
   */
-#ifndef UART_PARSE_TASK_H
-#define UART_PARSE_TASK_H
+#ifndef UART_PARSE_TASK_H__
+#define UART_PARSE_TASK_H__
 
 #include <stdint.h>
 

@@ -1,5 +1,5 @@
-#ifndef BSP_UART_DRIVER_H
-#define BSP_UART_DRIVER_H
+#ifndef BSP_UART_DRIVER_H__
+#define BSP_UART_DRIVER_H__
 
 void uart_driver_func(void *argument);
 

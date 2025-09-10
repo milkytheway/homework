@@ -53,3 +53,4 @@
 07_freertos_uart1\bsp_uart_driver.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h
 07_freertos_uart1\bsp_uart_driver.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h
 07_freertos_uart1\bsp_uart_driver.o: ..\BSP\USART\bsp_uart_driver.h
+07_freertos_uart1\bsp_uart_driver.o: ..\Middlewares\circular_buffer\circular_buffer.h

@@ -7,6 +7,7 @@
 #include "cmsis_os.h"
 #include "bsp_uart_driver.h"
 #include "elog.h"
+#include "circular_buffer.h"
 
 #define TAG "bsp_uart_driver"
 #define BUFFER_A 0
@@ -21,6 +22,19 @@ uint8_t g_data_buffer_B[1] = {0x00};
 
 void uart_driver_func(void *argument)
 {
+    CircularBuffer_t *pbuf = NULL;
+    pbuf = create_Empty_Circular_Buffer();
+    if (NULL == pbuf)
+    {
+        elog_error(TAG, "Circular buffer creation failed");
+        return;
+    }
+    else
+    {
+        elog_info(TAG, "Circular buffer creation success");
+    }
+    printf("buffer empty status: %d\r\n", is_buffer_empty(pbuf));
+
     buffer_flag = BUFFER_A;
     if (HAL_OK == HAL_UART_Receive_IT(&huart1, (uint8_t *)&g_data_buffer_A, 1))
     {
