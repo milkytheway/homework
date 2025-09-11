@@ -28,30 +28,30 @@
 
 #define TAG "uart_parse_task"
 
-QueueHandle_t queue_irq_rec_A;
+QueueHandle_t queue_data_proc = NULL;
 uint8_t receivedata = 0;
 
 void uart_rec_A_func(void *argument)
 {
   /* USER CODE BEGIN uart_rec_A_func */
   elog_info(TAG, "uart_rec_A_func is running...");
-  queue_irq_rec_A = NULL;
-  queue_irq_rec_A = xQueueCreate(1, 4);
-  if (NULL == queue_irq_rec_A)
+  queue_data_proc = NULL;
+  queue_data_proc = xQueueCreate(1, 4);
+  if (NULL == queue_data_proc)
   {
-    elog_error(TAG, "queue_irq_rec_A creation failed");
+    elog_error(TAG, "queue_data_proc creation failed");
     return;
   }
   else
   {
-    elog_info(TAG, "queue_irq_rec_A creation success");
+    elog_info(TAG, "queue_data_proc creation success");
   }
   /* Infinite loop */
   for(;;)
   {
-    if (pdTRUE == xQueueReceive(queue_irq_rec_A, &receivedata, portMAX_DELAY))
+    if (pdTRUE == xQueueReceive(queue_data_proc, &receivedata, portMAX_DELAY))
     {
-      elog_info(TAG, "Data received from queue: %d", receivedata);
+      elog_info(TAG, "Data received from queue: %x", receivedata);
     }
     elog_info(TAG, "uart_rec_A_func is running...");
     osDelay(1000);

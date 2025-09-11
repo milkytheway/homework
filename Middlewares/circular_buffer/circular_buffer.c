@@ -33,8 +33,8 @@ CircularBuffer_t * create_Empty_Circular_Buffer(void)
  * @param[in] pbuf       : Pointer to the circular buffer.
  * 
  * @return 0xFF; : Buffer pointer is NULL.
- * @return 0x00; : Buffer is empty.
- * @return 0x01; : Buffer is not empty.
+ * @return 0x00; : Buffer is not empty.
+ * @return 0x01; : Buffer is empty.
  * */
 uint8_t is_buffer_empty(CircularBuffer_t *pbuf)
 {
@@ -58,8 +58,8 @@ uint8_t is_buffer_empty(CircularBuffer_t *pbuf)
  * @param[in] pbuf       : Pointer to the circular buffer.
  * 
  * @return 0xFF; : Buffer pointer is NULL.
- * @return 0x00; : Buffer is full.
- * @return 0x01; : Buffer is not full.
+ * @return 0x00; : Buffer is not full.
+ * @return 0x01; : Buffer is full.
  * */
 uint8_t is_buffer_full(CircularBuffer_t *pbuf)
 {
@@ -72,9 +72,9 @@ uint8_t is_buffer_full(CircularBuffer_t *pbuf)
     if(((pbuf->head + 1) % pbuf->max_size) == (pbuf->tail % pbuf->max_size))
     {
         elog_info("CircularBuffer", "Buffer is full");
-        return 0x00; // Buffer is full
+        return 0x01; // Buffer is full
     }
-    return 0x01; // Buffer is not full
+    return 0x00; // Buffer is not full
 }
 
 /**
@@ -102,16 +102,16 @@ uint8_t insert_data(CircularBuffer_t *pbuf, data_type_t data)
         return 0xFF; // Error: NULL buffer
     }
 
-    if(is_buffer_full(pbuf) == 0x00)
+    if(is_buffer_full(pbuf))
     {
-        elog_warning("CircularBuffer", "Buffer is full, cannot insert data");
+        elog_error("CircularBuffer", "Buffer is full, cannot insert data");
         return 0x00; // Buffer is full
     }
 
     pbuf->buffer[pbuf->head] = data;
     pbuf->head = (pbuf->head + 1) % pbuf->max_size;
 
-    if(0x00 == is_buffer_full(pbuf))
+    if(is_buffer_full(pbuf))
     {
         pbuf->full = 1; // Mark buffer as full
     }
@@ -127,9 +127,9 @@ uint8_t read_data(CircularBuffer_t *pbuf, data_type_t *data)
         return 0xFF; // Error: NULL buffer or data pointer
     }
 
-    if(is_buffer_empty(pbuf) == 0x00)
+    if(is_buffer_empty(pbuf))
     {
-        elog_warning("CircularBuffer", "Buffer is empty, cannot read data");
+        elog_error("CircularBuffer", "Buffer is empty, cannot read data");
         return 0x00; // Buffer is empty
     }
 

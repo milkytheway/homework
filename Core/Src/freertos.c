@@ -143,7 +143,7 @@ void StartDefaultTask(void *argument)
   /* Infinite loop */
   for(;;)
   {
-    elog_info(TAG, "defaultTask is running...");
+    //elog_info(TAG, "defaultTask is running...");
     osDelay(1000);
   }
 
