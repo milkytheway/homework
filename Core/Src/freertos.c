@@ -112,7 +112,7 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the thread(s) */
   /* creation of defaultTask */
-  defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+  //defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
 
   /* creation of task_uart_rec_A */
   task_uart_rec_AHandle = osThreadNew(uart_rec_A_func, NULL, &task_uart_rec_A_attributes);

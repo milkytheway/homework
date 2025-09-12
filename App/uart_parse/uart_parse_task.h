@@ -19,8 +19,15 @@
 
 #include <stdint.h>
 
-uint8_t buffer1[1] = {0};
-uint8_t buffer2[1] = {0};
+#define FRAME_NOT_DETECTED 0x01
+#define FRAME_HEAD 0x02
+#define FRAME_TAIL 0x03
+
+#define FRAME_HEAD_FLAG 0xB1
+#define FRAME_TAIL_FLAG 0xB2
+
+// uint8_t buffer1[1] = {0};
+// uint8_t buffer2[1] = {0};
 
 void uart_rec_A_func(void *argument);
 

@@ -88,22 +88,33 @@ void uart_driver_func(void *argument)
 
         if(IRQ_BUFFER_RDY_SIGNAL == receivedata)
         {
-            uint8_t data_from_cbuf = 0;
-            if(0x01 == read_data(g_pbuf_irq, &data_from_cbuf))
-            {
-                elog_info(TAG, "Data read from circular buffer: %c", data_from_cbuf);
-            }
+            // uint8_t data_from_cbuf = 0;
+            // if(0x01 == read_data(g_pbuf_irq, &data_from_cbuf))
+            // {
+            //     elog_info(TAG, "Data read from circular buffer: %c", data_from_cbuf);
+            // }
         }
 
-        uint32_t data_to_send = DATA_RDY_SIGNAL;
-        if(pdPASS == xQueueSend(queue_data_proc, &data_to_send, 0))
+        uint8_t data_to_send = DATA_RDY_SIGNAL;
+        if(pdPASS == xQueueOverwrite(queue_data_proc, &data_to_send))
         {
             printf("Data sent to queue_data_proc successfully\r\n");
         }
 
 
-        osDelay(1000);
+        //osDelay(1000);
     }
+}
+
+uint8_t get_circular_buffer_handle(void **ppbuf)
+{
+    if(NULL == ppbuf)
+    {
+        elog_error(TAG, "Pointer to pointer is NULL");
+        return 0;
+    }
+    *ppbuf = (void *)g_pbuf_irq;
+    return 1;
 }
 
 /* USER CODE BEGIN 1 */
@@ -185,17 +196,14 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
         elog_debug(TAG, "Inserted data: %c into circular buffer", g_received_byte);
         if(HAL_OK == HAL_UART_Receive_IT(&huart1, &g_received_byte, 1))
         {
-            /* Restart UART receive interrupt */
-            elog_info(TAG, "Restart UART receive interrupt successfully!");
         }
     }
 
-    uint32_t data_to_send = IRQ_BUFFER_RDY_SIGNAL;
-    if(pdPASS == xQueueSendFromISR(uart_receive_irq_queue, &data_to_send, NULL))
+    uint8_t data_to_send = IRQ_BUFFER_RDY_SIGNAL;
+    if(pdPASS == xQueueOverwriteFromISR(uart_receive_irq_queue, &data_to_send, NULL))
     {
-        printf("Data sent to queue successfully\r\n");
+        //printf("Data sent to queue successfully\r\n");
     }
-    printf("uart1 interrupt running\r\n");
 
 }
 /* USER CODE END 1 */
