@@ -1,6 +1,7 @@
 07_freertos_uart1\uart_parse_task.o: ..\App\uart_parse\uart_parse_task.c
 07_freertos_uart1\uart_parse_task.o: ..\App\uart_parse\uart_parse_task.h
 07_freertos_uart1\uart_parse_task.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdint.h
+07_freertos_uart1\uart_parse_task.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\string.h
 07_freertos_uart1\uart_parse_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
 07_freertos_uart1\uart_parse_task.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stddef.h
 07_freertos_uart1\uart_parse_task.o: ../Core/Inc/FreeRTOSConfig.h

@@ -17,7 +17,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "uart_parse_task.h"
-
+#include "string.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "main.h"
@@ -81,6 +81,9 @@ void uart_rec_A_func(void *argument)
               osDelay(5); // Simulate data processing delay
           }
 
+          static uint8_t buffer_frame_check[20] = {0};
+          static uint8_t data_counter = 0;
+
           static uint8_t frame_status = FRAME_NOT_DETECTED;
           switch(frame_status)
           {
@@ -96,6 +99,27 @@ void uart_rec_A_func(void *argument)
                   {
                       frame_status = FRAME_TAIL;
                       elog_info(TAG, "Frame tail detected");
+                      //complete frame received, process it
+                      uint32_t data_sum_frame = (uint32_t)buffer_frame_check[data_counter-1];
+                      elog_info(TAG,"data_sum_frame: %d",data_sum_frame);
+                      uint32_t data_sum = 0;
+                      for(uint8_t i = 0; i < data_counter-1; i++)
+                      {
+                        data_sum += (uint32_t)buffer_frame_check[i];
+                        elog_info(TAG, "Frame data[%d]: %x", i, buffer_frame_check[i]);
+                      }
+                      elog_info(TAG,"data_sum: %d",data_sum);
+                      if(data_sum_frame == data_sum)
+                      {
+                          elog_info(TAG, "Frame data checksum valid");
+                      }
+                      else
+                      {
+                          elog_error(TAG, "Frame data checksum invalid");
+                      }
+
+                      data_counter = 0;
+                      memset(buffer_frame_check, 0, sizeof(buffer_frame_check));
                   }
                   else if(FRAME_HEAD_FLAG == data_from_cbuf)
                   {
@@ -105,6 +129,13 @@ void uart_rec_A_func(void *argument)
                   else
                   {
                       // Process frame data
+                      buffer_frame_check[data_counter] = data_from_cbuf;
+                      data_counter++;
+                      elog_info(TAG, "data_counter: %d", data_counter);
+                      if(data_counter >= sizeof(buffer_frame_check))
+                      {
+                          data_counter = sizeof(buffer_frame_check) - 1; // Prevent overflow
+                      }
                       elog_info(TAG, "Processing frame data: %x", data_from_cbuf);
                   }
                   break;
