@@ -149,6 +149,9 @@ void uart_rec_A_func(void *argument)
                   break;
           }
       }
+    } else
+    {
+      elog_error(TAG, "Failed to receive data from queue");
     }
     elog_info(TAG, "uart_rec_A_func is running...");
     //osDelay(1000);

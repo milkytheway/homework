@@ -139,3 +139,37 @@ uint8_t read_data(CircularBuffer_t *pbuf, data_type_t *data)
 
     return 0x01; // Data read successfully
 }
+
+uint8_t get_head_pos(CircularBuffer_t *pbuf, uint32_t *head_pos)
+{
+    if(NULL == pbuf || NULL == head_pos)
+    {
+        elog_error("CircularBuffer", "Buffer pointer or head_pos pointer is NULL");
+        return 0x00; // Error: NULL buffer or head_pos pointer
+    }
+
+    *head_pos = pbuf->head;
+    return 0x01; // Successfully retrieved head position
+}
+
+uint8_t head_pos_increment(CircularBuffer_t *pbuf, uint32_t increment_value)
+{
+    if(NULL == pbuf)
+    {
+        elog_error("CircularBuffer", "Buffer pointer is NULL");
+        return 0x00; // Error: NULL buffer
+    }
+
+    pbuf->head = (pbuf->head + increment_value) % pbuf->max_size;
+
+    if(is_buffer_full(pbuf))
+    {
+        pbuf->full = 1; // Mark buffer as full
+    }
+    else
+    {
+        pbuf->full = 0; // Mark buffer as not full
+    }
+
+    return 0x01; // Successfully incremented head position
+}

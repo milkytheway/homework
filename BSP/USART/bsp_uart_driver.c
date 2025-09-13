@@ -54,6 +54,9 @@ void uart_driver_func(void *argument)
         elog_info(TAG, "uart_receive_irq_queue creation success");
     }
 
+    HAL_UARTEx_ReceiveToIdle_DMA(&huart1, pbuf->buffer, CIRCULAR_BUFFER_SIZE);
+
+#if 0
     if (HAL_OK == HAL_UART_Receive_IT(&huart1, &g_received_byte, 1))
     {
         /* Start UART receive interrupt */
@@ -63,7 +66,7 @@ void uart_driver_func(void *argument)
     {
         elog_error(TAG, "Start UART receive interrupt failed!");
     }
-
+#endif
 
 #if 0
     buffer_flag = BUFFER_A;
@@ -120,6 +123,7 @@ uint8_t get_circular_buffer_handle(void **ppbuf)
 /* USER CODE BEGIN 1 */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
+    elog_info(TAG, "HAL_UART_RxCpltCallback");
 #if 0 //AB buffer test
     if(BUFFER_A == buffer_flag)
     {
@@ -205,6 +209,177 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
         //printf("Data sent to queue successfully\r\n");
     }
 
+}
+
+
+void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
+{
+    if(NULL == g_pbuf_irq)
+    {
+        elog_error(TAG, "Global circular buffer pointer is NULL");
+        return;
+    }
+
+    elog_debug(TAG, "HAL_UARTEx_RxEventCallback");
+    elog_debug(TAG, "size = [%d]", Size);
+
+}
+
+void dma_half_irq_callback(uint32_t num_of_data)
+{
+    uint32_t head_pos = 0;
+    if(NULL == g_pbuf_irq)
+    {
+        elog_error("HALF", "Global circular buffer pointer is NULL");
+        return;
+    }
+    if(get_head_pos(g_pbuf_irq, &head_pos))
+    {
+        // elog_debug("HALF", "DMA half IRQ callback, head pos: %d", head_pos);
+    }
+    else
+    {
+        elog_error("HALF", "Get head position failed");
+        return;
+    }
+    uint32_t data_pos_in_buf = (CIRCULAR_BUFFER_SIZE/2)-1;
+    // elog_debug("HALF", "data_pos_in_buf = %d", data_pos_in_buf);
+    uint32_t head_pos_in_buf = head_pos % CIRCULAR_BUFFER_SIZE;
+    // elog_debug("HALF", "head_pos_in_buf = %d", head_pos_in_buf);
+    uint32_t shift = 0;
+    if(data_pos_in_buf < head_pos_in_buf)
+    {
+        shift = (data_pos_in_buf + CIRCULAR_BUFFER_SIZE) - head_pos_in_buf + 1;
+        //elog_debug("HALF", "dma complete shift = %d", shift);
+    } 
+    else
+    {
+        shift = data_pos_in_buf - head_pos_in_buf + 1;
+        //elog_debug("HALF", "dma normal shift = %d", shift);
+    }
+
+    if(shift > 0)
+    {
+        head_pos_increment(g_pbuf_irq, shift);
+        get_head_pos(g_pbuf_irq, &head_pos);
+        // elog_debug("COMPLETE", "pos aft increment %d", head_pos);
+    }
+    else
+    {
+        elog_error("COMPLETE", "Handle negative shift error");
+        return;
+    }
+
+    // Notify the data ready
+    uint8_t data_to_send = IRQ_BUFFER_RDY_SIGNAL;
+    if(pdPASS == xQueueOverwriteFromISR(uart_receive_irq_queue, &data_to_send, NULL))
+    {
+        printf("Data sent to queue successfully\r\n");
+    }
+}
+
+void dma_complete_irq_callback(uint32_t num_of_data)
+{
+    uint32_t head_pos = 0;
+    if(NULL == g_pbuf_irq)
+    {
+        elog_error("COMPLETE", "Global circular buffer pointer is NULL");
+        return;
+    }
+    if(get_head_pos(g_pbuf_irq, &head_pos))
+    {
+        // elog_debug("COMPLETE", "DMA complete IRQ, head pos val: %d", head_pos);
+    }
+    else
+    {
+        elog_error("COMPLETE", "Get head position failed");
+        return;
+    }
+    uint32_t data_pos_in_buf = CIRCULAR_BUFFER_SIZE-1;
+    // elog_debug("COMPLETE", "data_pos_in_buf = %d", data_pos_in_buf);
+    uint32_t head_pos_in_buf = head_pos % CIRCULAR_BUFFER_SIZE;
+    // elog_debug("COMPLETE", "head_pos_in_buf = %d", head_pos_in_buf);
+    uint32_t shift = 0;
+    if(data_pos_in_buf < head_pos_in_buf)
+    {
+        shift = (data_pos_in_buf + CIRCULAR_BUFFER_SIZE) - head_pos_in_buf + 1;
+        //elog_debug("COMPLETE", "dma complete shift = %d", shift);
+    } 
+    else
+    {
+        shift = data_pos_in_buf - head_pos_in_buf + 1;
+        //elog_debug("COMPLETE", "dma normal shift = %d", shift);
+    }
+    if(shift > 0)
+    {
+        head_pos_increment(g_pbuf_irq, shift);
+        get_head_pos(g_pbuf_irq, &head_pos);
+        // elog_debug("COMPLETE", "pos aft increment %d", head_pos);
+    }
+    else
+    {
+        elog_error("COMPLETE", "Handle negative shift error");
+        return;
+    }
+
+    // Notify the data ready
+    uint8_t data_to_send = IRQ_BUFFER_RDY_SIGNAL;
+    if(pdPASS == xQueueOverwriteFromISR(uart_receive_irq_queue, &data_to_send, NULL))
+    {
+        printf("Data sent to queue successfully\r\n");
+    }
+}
+
+void uart_idle_irq_callback(uint32_t num_of_data)
+{
+    uint32_t head_pos = 0;
+    if(NULL == g_pbuf_irq)
+    {
+        elog_error("IDLE", "Global circular buffer pointer is NULL");
+        return;
+    }
+    if(get_head_pos(g_pbuf_irq, &head_pos))
+    {
+        // elog_debug("IDLE", "UART idle IRQ callback, head pos: %d", head_pos);
+    }
+    else
+    {
+        elog_error("IDLE", "Get head position failed");
+        return;
+    }
+
+    uint32_t data_pos_in_buf = (num_of_data-1);
+    // elog_debug("IDLE", "data_pos_in_buf = %d", data_pos_in_buf);
+    uint32_t head_pos_in_buf = head_pos % CIRCULAR_BUFFER_SIZE;
+    // elog_debug("IDLE", "head_pos_in_buf = %d", head_pos_in_buf);
+    uint32_t shift = 0;
+    if(data_pos_in_buf < head_pos_in_buf)
+    {
+        shift = (data_pos_in_buf + CIRCULAR_BUFFER_SIZE) - head_pos_in_buf + 1;
+        //elog_debug("COMPLETE", "dma complete shift = %d", shift);
+    }
+    else
+    {
+        shift = data_pos_in_buf - head_pos_in_buf + 1;
+        //elog_debug("COMPLETE", "dma normal shift = %d", shift);
+    }
+    if(shift > 0)
+    {
+        head_pos_increment(g_pbuf_irq, shift);
+        get_head_pos(g_pbuf_irq, &head_pos);
+        // elog_debug("IDLE", "pos aft increment %d", head_pos);
+    }
+    else
+    {
+        elog_error("IDLE", "Handle negative shift error");
+        return;
+    }
+
+    uint8_t data_to_send = IRQ_BUFFER_RDY_SIGNAL;
+    if(pdPASS == xQueueOverwriteFromISR(uart_receive_irq_queue, &data_to_send, NULL))
+    {
+        printf("Data sent to queue successfully\r\n");
+    }
 }
 /* USER CODE END 1 */
 

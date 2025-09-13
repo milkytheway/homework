@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#define CIRCULAR_BUFFER_SIZE 100
+#define CIRCULAR_BUFFER_SIZE 10
 
 typedef uint8_t data_type_t;
 
@@ -21,5 +21,8 @@ uint8_t is_buffer_full(CircularBuffer_t *pbuf);
 
 uint8_t insert_data(CircularBuffer_t *pbuf, data_type_t data);
 uint8_t read_data(CircularBuffer_t *pbuf, data_type_t *data);
+
+uint8_t get_head_pos(CircularBuffer_t *pbuf, uint32_t *head_pos);
+uint8_t head_pos_increment(CircularBuffer_t *pbuf, uint32_t increment_value);
 #endif /* __CIRCULAR_BUFFER_H__ */
 

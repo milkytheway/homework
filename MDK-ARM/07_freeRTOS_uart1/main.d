@@ -50,5 +50,6 @@
 07_freertos_uart1\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
 07_freertos_uart1\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
 07_freertos_uart1\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h
+07_freertos_uart1\main.o: ../Core/Inc/dma.h
 07_freertos_uart1\main.o: ../Core/Inc/usart.h
 07_freertos_uart1\main.o: ../Core/Inc/gpio.h

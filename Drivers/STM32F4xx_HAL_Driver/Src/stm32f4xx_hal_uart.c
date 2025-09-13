@@ -268,6 +268,7 @@
 #ifdef HAL_UART_MODULE_ENABLED
 
 /* Private typedef -----------------------------------------------------------*/
+#include "bsp_uart_driver.h"
 /* Private define ------------------------------------------------------------*/
 /** @addtogroup UART_Private_Constants
   * @{
@@ -2531,7 +2532,8 @@ void HAL_UART_IRQHandler(UART_HandleTypeDef *huart)
         huart->RxEventCallback(huart, (huart->RxXferSize - huart->RxXferCount));
 #else
         /*Call legacy weak Rx Event callback*/
-        HAL_UARTEx_RxEventCallback(huart, (huart->RxXferSize - huart->RxXferCount));
+        //HAL_UARTEx_RxEventCallback(huart, (huart->RxXferSize - huart->RxXferCount));
+        uart_idle_irq_callback(huart->RxXferSize - huart->RxXferCount);
 #endif /* USE_HAL_UART_REGISTER_CALLBACKS */
       }
       return;
@@ -3072,7 +3074,8 @@ static void UART_DMAReceiveCplt(DMA_HandleTypeDef *hdma)
     huart->RxEventCallback(huart, huart->RxXferSize);
 #else
     /*Call legacy weak Rx Event callback*/
-    HAL_UARTEx_RxEventCallback(huart, huart->RxXferSize);
+    //HAL_UARTEx_RxEventCallback(huart, huart->RxXferSize);
+    dma_complete_irq_callback(huart->RxXferSize);
 #endif /* USE_HAL_UART_REGISTER_CALLBACKS */
   }
   else
@@ -3107,7 +3110,8 @@ static void UART_DMARxHalfCplt(DMA_HandleTypeDef *hdma)
     huart->RxEventCallback(huart, huart->RxXferSize / 2U);
 #else
     /*Call legacy weak Rx Event callback*/
-    HAL_UARTEx_RxEventCallback(huart, huart->RxXferSize / 2U);
+    //HAL_UARTEx_RxEventCallback(huart, huart->RxXferSize / 2U);
+    dma_half_irq_callback(huart->RxXferSize / 2U);
 #endif /* USE_HAL_UART_REGISTER_CALLBACKS */
   }
   else

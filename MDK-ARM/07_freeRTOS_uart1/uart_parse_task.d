@@ -53,5 +53,5 @@
 07_freertos_uart1\uart_parse_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
 07_freertos_uart1\uart_parse_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h
 07_freertos_uart1\uart_parse_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h
-07_freertos_uart1\uart_parse_task.o: ..\Middlewares\circular_buffer\circular_buffer.h
+07_freertos_uart1\uart_parse_task.o: ../Middlewares/circular_buffer/circular_buffer.h
 07_freertos_uart1\uart_parse_task.o: ../BSP/USART/bsp_uart_driver.h

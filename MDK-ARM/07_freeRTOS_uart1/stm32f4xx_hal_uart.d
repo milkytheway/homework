@@ -30,3 +30,4 @@
 07_freertos_uart1\stm32f4xx_hal_uart.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 07_freertos_uart1\stm32f4xx_hal_uart.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 07_freertos_uart1\stm32f4xx_hal_uart.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
+07_freertos_uart1\stm32f4xx_hal_uart.o: ../BSP/USART/bsp_uart_driver.h
