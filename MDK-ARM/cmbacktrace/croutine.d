@@ -1,0 +1,14 @@
+cmbacktrace\croutine.o: ../Middlewares/Third_Party/FreeRTOS/Source/croutine.c
+cmbacktrace\croutine.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
+cmbacktrace\croutine.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stddef.h
+cmbacktrace\croutine.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdint.h
+cmbacktrace\croutine.o: ../Core/Inc/FreeRTOSConfig.h
+cmbacktrace\croutine.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+cmbacktrace\croutine.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+cmbacktrace\croutine.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+cmbacktrace\croutine.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h
+cmbacktrace\croutine.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+cmbacktrace\croutine.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
+cmbacktrace\croutine.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
+cmbacktrace\croutine.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/croutine.h
+cmbacktrace\croutine.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
