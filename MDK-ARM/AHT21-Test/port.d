@@ -1,0 +1,12 @@
+aht21-test\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/port.c
+aht21-test\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
+aht21-test\port.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stddef.h
+aht21-test\port.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdint.h
+aht21-test\port.o: ../Core/Inc/FreeRTOSConfig.h
+aht21-test\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+aht21-test\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+aht21-test\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+aht21-test\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h
+aht21-test\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+aht21-test\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
+aht21-test\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h

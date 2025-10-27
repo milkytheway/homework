@@ -1,0 +1,9 @@
+aht21-test\elog.o: ..\Middlewares\easylogger\src\elog.c
+aht21-test\elog.o: ../Middlewares/easylogger/inc/elog.h
+aht21-test\elog.o: ../Middlewares/easylogger/inc/elog_cfg.h
+aht21-test\elog.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdint.h
+aht21-test\elog.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stddef.h
+aht21-test\elog.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdbool.h
+aht21-test\elog.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\string.h
+aht21-test\elog.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdarg.h
+aht21-test\elog.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdio.h

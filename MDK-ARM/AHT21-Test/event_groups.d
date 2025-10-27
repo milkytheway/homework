@@ -1,0 +1,15 @@
+aht21-test\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/event_groups.c
+aht21-test\event_groups.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdlib.h
+aht21-test\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
+aht21-test\event_groups.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stddef.h
+aht21-test\event_groups.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdint.h
+aht21-test\event_groups.o: ../Core/Inc/FreeRTOSConfig.h
+aht21-test\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+aht21-test\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+aht21-test\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+aht21-test\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h
+aht21-test\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+aht21-test\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
+aht21-test\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
+aht21-test\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h
+aht21-test\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h

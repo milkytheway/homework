@@ -1,0 +1,13 @@
+aht21-test\heap_4.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c
+aht21-test\heap_4.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdlib.h
+aht21-test\heap_4.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
+aht21-test\heap_4.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stddef.h
+aht21-test\heap_4.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdint.h
+aht21-test\heap_4.o: ../Core/Inc/FreeRTOSConfig.h
+aht21-test\heap_4.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+aht21-test\heap_4.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+aht21-test\heap_4.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+aht21-test\heap_4.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h
+aht21-test\heap_4.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+aht21-test\heap_4.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
+aht21-test\heap_4.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h

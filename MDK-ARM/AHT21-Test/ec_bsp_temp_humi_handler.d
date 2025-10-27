@@ -1,0 +1,9 @@
+aht21-test\ec_bsp_temp_humi_handler.o: ..\Bsp\AHT21\handler\ec_bsp_temp_humi_handler.c
+aht21-test\ec_bsp_temp_humi_handler.o: ..\Bsp\AHT21\handler\ec_bsp_temp_humi_handler.h
+aht21-test\ec_bsp_temp_humi_handler.o: ../Bsp/AHT21/driver/ec_bsp_aht21_driver.h
+aht21-test\ec_bsp_temp_humi_handler.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdio.h
+aht21-test\ec_bsp_temp_humi_handler.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdint.h
+aht21-test\ec_bsp_temp_humi_handler.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdbool.h
+aht21-test\ec_bsp_temp_humi_handler.o: ../Middlewares/easylogger/inc/elog.h
+aht21-test\ec_bsp_temp_humi_handler.o: ../Middlewares/easylogger/inc/elog_cfg.h
+aht21-test\ec_bsp_temp_humi_handler.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stddef.h
