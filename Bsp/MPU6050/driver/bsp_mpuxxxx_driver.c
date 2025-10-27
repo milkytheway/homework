@@ -81,6 +81,8 @@
  //********************** private macro definitions **************************//
 
  //********************** private function prototypes ************************//
+static MPUXXXX_status_t read_id(void * const p_instance, uint8_t *p_id);
+static MPUXXXX_status_t mpu_init(void * const p_instance);
 static MPUXXXX_status_t set_gyro_fsr(void * const p_instance, uint8_t fsr);
 static MPUXXXX_status_t set_accel_fsr(void * const p_instance, uint8_t fsr);
 static MPUXXXX_status_t set_lpf(void * const p_instance);
@@ -89,7 +91,341 @@ static MPUXXXX_status_t read_accel(void * const p_instance, mpu6050_data_t *p_da
 static MPUXXXX_status_t read_gyro(void * const p_instance, mpu6050_data_t *p_data);
 static MPUXXXX_status_t read_temp(void * const p_instance, mpu6050_data_t *p_data);
 static MPUXXXX_status_t read_all(void * const p_instance, mpu6050_data_t *p_data);
+static MPUXXXX_status_t mpu_wakeup(void * const p_instance);
+static MPUXXXX_status_t mpu_sleep(void * const p_instance);
  //********************** private function prototypes ************************//
+
+/******************************************************************************
+ * @name    read_id
+ * @brief   Read the WHO_AM_I register to get MPU6050 device ID
+ * @param   p_instance[in] pointer to the MPU6050 driver instance
+ * @param   p_id[out] pointer to store the device ID
+ * @return  MPUXXXX_status_t operation status
+ *          - MPU_OK: operation completed successfully
+ *          - MPU_ERRORPARAMETER: invalid parameter
+ *          - MPU_ERROR: IIC interface not initialized
+ * @note    This function uses IIC_Read_One_Byte() from iic_hal.c to read
+ *          the WHO_AM_I register (0x75).
+ *          
+ *          Expected device ID for MPU6050: 0x68
+ *          
+ *          The function does NOT verify the ID value, it only reads and
+ *          returns it. The caller is responsible for verification.
+ *****************************************************************************/
+static MPUXXXX_status_t read_id(void * const p_instance, uint8_t *p_id)
+{
+    uint8_t device_id = 0;
+    
+    /* Parameter validation */
+    if (NULL == p_instance) {
+#ifdef MPU_DEBUG
+        log_e("read_id: instance pointer is NULL");
+#endif
+        return MPU_ERRORPARAMETER;
+    }
+    
+    if (NULL == p_id) {
+#ifdef MPU_DEBUG
+        log_e("read_id: output pointer is NULL");
+#endif
+        return MPU_ERRORPARAMETER;
+    }
+    
+    /* Get IIC interface */
+    iic_driver_interface_t *p_iic = MPU_IIC_INTERFACE(p_instance);
+    void *p_bus = MPU_BUS_INSTANCE(p_instance);
+    
+    if (NULL == p_iic || NULL == p_iic->pf_iic_read_reg) {
+#ifdef MPU_DEBUG
+        log_e("read_id: IIC interface not initialized");
+#endif
+        return MPU_ERROR;
+    }
+    
+#ifdef OS_SUPPORTING
+    if (NULL != p_iic->pf_critical_enter) {
+        p_iic->pf_critical_enter();
+    }
+#endif
+    
+    /* Read WHO_AM_I register (0x75) using IIC_Read_One_Byte
+     * This function is already wrapped in iic_hal.c and handles:
+     * - Start condition
+     * - Write device address + register address
+     * - Restart
+     * - Read device address + read data
+     * - NACK + Stop condition
+     */
+    device_id = p_iic->pf_iic_read_reg(p_bus, MPU_ADDR, MPU_WHO_AM_I_REG);
+    
+#ifdef OS_SUPPORTING
+    if (NULL != p_iic->pf_critical_exit) {
+        p_iic->pf_critical_exit();
+    }
+#endif
+    
+    /* Store the result */
+    *p_id = device_id;
+    
+#ifdef MPU_DEBUG
+    log_d("read_id: WHO_AM_I register = 0x%02X", device_id);
+#endif
+    
+    return MPU_OK;
+}
+
+/******************************************************************************
+ * @name    mpu_init
+ * @brief   Complete initialization sequence for MPU6050 sensor
+ * @param   p_instance[in] pointer to the MPU6050 driver instance
+ * @return  MPUXXXX_status_t operation status
+ *          - MPU_OK: initialization completed successfully
+ *          - MPU_ERRORPARAMETER: invalid parameter
+ *          - MPU_ERRORRESOURCE: device ID verification failed
+ *          - MPU_ERROR: operation failed
+ * @note    This function performs a complete initialization sequence:
+ *          1. Initialize IIC interface
+ *          2. Device reset (PWR_MGMT1 bit 7)
+ *          3. Wait 100ms for reset to complete
+ *          4. Wake up device and set clock source (PLL with X gyro)
+ *          5. Disable all interrupts
+ *          6. Disable IIC master mode
+ *          7. Disable FIFO
+ *          8. Configure INT pin (active low, push-pull, latch until read)
+ *          9. Configure default sensor parameters (±2g, ±250°/s, 42Hz DLPF, 100Hz)
+ *          10. Read and verify device ID (expected: 0x68)
+ *          11. Enable Data Ready interrupt
+ *          
+ *          After initialization, the device is ready to use.
+ *          Call pf_read_xxx() functions to read sensor data.
+ *****************************************************************************/
+static MPUXXXX_status_t mpu_init(void * const p_instance)
+{
+#ifdef MPU_DEBUG
+    log_i("mpu_init: Starting MPU6050 complete initialization...");
+#endif
+    
+    MPUXXXX_status_t status = MPU_OK;
+    uint8_t device_id = 0;
+    
+    /* Parameter validation */
+    if (NULL == p_instance) {
+#ifdef MPU_DEBUG
+        log_e("mpu_init: instance pointer is NULL");
+#endif
+        return MPU_ERRORPARAMETER;
+    }
+    
+    /* Get IIC interface */
+    iic_driver_interface_t *p_iic = MPU_IIC_INTERFACE(p_instance);
+    void *p_bus = MPU_BUS_INSTANCE(p_instance);
+    
+    if (NULL == p_iic || NULL == p_iic->pf_iic_init || NULL == p_iic->pf_iic_write_reg) {
+#ifdef MPU_DEBUG
+        log_e("mpu_init: IIC interface not initialized");
+#endif
+        return MPU_ERRORPARAMETER;
+    }
+    
+    /* Step 1: Initialize IIC interface */
+#ifdef MPU_DEBUG
+    log_i("mpu_init: [1/11] Initializing IIC interface...");
+#endif
+    p_iic->pf_iic_init(p_bus);
+    
+    /* Step 2: Device reset */
+#ifdef MPU_DEBUG
+    log_i("mpu_init: [2/11] Resetting device...");
+#endif
+    status = p_iic->pf_iic_write_reg(p_bus, MPU_ADDR, MPU_PWR_MGMT1_REG, MPU_PWR1_DEVICE_RESET);
+    if (MPU_OK != status) {
+#ifdef MPU_DEBUG
+        log_e("mpu_init: device reset failed");
+#endif
+        return status;
+    }
+    
+    /* Step 3: Wait for reset to complete */
+#ifdef MPU_DEBUG
+    log_i("mpu_init: [3/11] Waiting for reset to complete (100ms)...");
+#endif
+    if (NULL != p_iic->pf_delay_ms) {
+        p_iic->pf_delay_ms(100);
+    }
+    
+    /* Step 4: Wake up device and set clock source */
+#ifdef MPU_DEBUG
+    log_i("mpu_init: [4/11] Waking up device and setting clock source...");
+#endif
+    status = p_iic->pf_iic_write_reg(p_bus, MPU_ADDR, MPU_PWR_MGMT1_REG, 0x01);
+    if (MPU_OK != status) {
+#ifdef MPU_DEBUG
+        log_e("mpu_init: wake up failed");
+#endif
+        return status;
+    }
+    
+    if (NULL != p_iic->pf_delay_ms) {
+        p_iic->pf_delay_ms(10);  // Small delay after wakeup
+    }
+    
+    /* Step 5: Disable all interrupts */
+#ifdef MPU_DEBUG
+    log_i("mpu_init: [5/11] Disabling all interrupts...");
+#endif
+    status = p_iic->pf_iic_write_reg(p_bus, MPU_ADDR, MPU_INT_EN_REG, 0x00);
+    if (MPU_OK != status) {
+#ifdef MPU_DEBUG
+        log_e("mpu_init: disable interrupts failed");
+#endif
+        return status;
+    }
+    
+    /* Step 6: Disable IIC master mode, disable FIFO */
+#ifdef MPU_DEBUG
+    log_i("mpu_init: [6/11] Disabling IIC master mode and FIFO...");
+#endif
+    status = p_iic->pf_iic_write_reg(p_bus, MPU_ADDR, MPU_USER_CTRL_REG, 0x00);
+    if (MPU_OK != status) {
+#ifdef MPU_DEBUG
+        log_e("mpu_init: disable IIC master mode failed");
+#endif
+        return status;
+    }
+    
+    /* Disable FIFO for all sensors */
+    status = p_iic->pf_iic_write_reg(p_bus, MPU_ADDR, MPU_FIFO_EN_REG, 0x00);
+    if (MPU_OK != status) {
+#ifdef MPU_DEBUG
+        log_e("mpu_init: disable FIFO failed");
+#endif
+        return status;
+    }
+    
+    /* Step 7: Configure INT pin */
+#ifdef MPU_DEBUG
+    log_i("mpu_init: [7/11] Configuring INT pin (active low, push-pull, latch)...");
+#endif
+    /* INT/BYPASS Config Register (0x37):
+     * Bit 7: INT_LEVEL = 1 (active low)
+     * Bit 6: INT_OPEN = 0 (push-pull)
+     * Bit 5: LATCH_INT_EN = 1 (latch until interrupt is cleared)
+     * Bit 4: INT_RD_CLEAR = 1 (clear on any read)
+     * Value: 0xB0
+     */
+    status = p_iic->pf_iic_write_reg(p_bus, MPU_ADDR, MPU_INTBP_CFG_REG, 0xB0);
+    if (MPU_OK != status) {
+#ifdef MPU_DEBUG
+        log_e("mpu_init: configure INT pin failed");
+#endif
+        return status;
+    }
+    
+    /* Step 8: Configure default sensor parameters */
+#ifdef MPU_DEBUG
+    log_i("mpu_init: [8/11] Configuring sensor parameters...");
+#endif
+    
+    /* Set gyroscope FSR to ±250°/s */
+    status = set_gyro_fsr(p_instance, MPU_GYRO_FSR_250DPS);
+    if (MPU_OK != status) {
+#ifdef MPU_DEBUG
+        log_e("mpu_init: set gyro FSR failed");
+#endif
+        return status;
+    }
+    
+    /* Set accelerometer FSR to ±2g */
+    status = set_accel_fsr(p_instance, MPU_ACCEL_FSR_2G);
+    if (MPU_OK != status) {
+#ifdef MPU_DEBUG
+        log_e("mpu_init: set accel FSR failed");
+#endif
+        return status;
+    }
+    
+    /* Set DLPF to 42Hz */
+    status = set_lpf(p_instance);
+    if (MPU_OK != status) {
+#ifdef MPU_DEBUG
+        log_e("mpu_init: set DLPF failed");
+#endif
+        return status;
+    }
+    
+    /* Set sample rate to 100Hz */
+    status = set_rate(p_instance, 100);
+    if (MPU_OK != status) {
+#ifdef MPU_DEBUG
+        log_e("mpu_init: set sample rate failed");
+#endif
+        return status;
+    }
+    
+    /* Step 9: Read and verify device ID */
+#ifdef MPU_DEBUG
+    log_i("mpu_init: [9/11] Reading and verifying device ID...");
+#endif
+    status = read_id(p_instance, &device_id);
+    if (MPU_OK != status) {
+#ifdef MPU_DEBUG
+        log_e("mpu_init: read device ID failed");
+#endif
+        return status;
+    }
+    
+    if (MPU_WHO_AM_I_ID != device_id) {
+#ifdef MPU_DEBUG
+        log_e("mpu_init: Device ID mismatch!");
+        log_e("  Expected: 0x%02X", MPU_WHO_AM_I_ID);
+        log_e("  Received: 0x%02X", device_id);
+#endif
+        return MPU_ERRORRESOURCE;
+    }
+    
+#ifdef MPU_DEBUG
+    log_i("  Device ID verified: 0x%02X (MPU6050)", device_id);
+#endif
+    
+    /* Step 10: Enable Data Ready interrupt */
+#ifdef MPU_DEBUG
+    log_i("mpu_init: [10/11] Enabling Data Ready interrupt...");
+#endif
+    status = p_iic->pf_iic_write_reg(p_bus, MPU_ADDR, MPU_INT_EN_REG, MPU_INT_DATA_RDY_EN);
+    if (MPU_OK != status) {
+#ifdef MPU_DEBUG
+        log_e("mpu_init: enable Data Ready interrupt failed");
+#endif
+        return status;
+    }
+    
+    /* Step 11: Small delay for all settings to take effect */
+#ifdef MPU_DEBUG
+    log_i("mpu_init: [11/11] Finalizing initialization...");
+#endif
+    if (NULL != p_iic->pf_delay_ms) {
+        p_iic->pf_delay_ms(10);
+    }
+    
+#ifdef MPU_DEBUG
+    log_i("mpu_init: ========================================");
+    log_i("mpu_init: MPU6050 initialization completed!");
+    log_i("mpu_init: Configuration summary:");
+    log_i("  - Device ID: 0x%02X (verified)", device_id);
+    log_i("  - Gyroscope FSR: ±250°/s");
+    log_i("  - Accelerometer FSR: ±2g");
+    log_i("  - DLPF Bandwidth: 42Hz");
+    log_i("  - Sample Rate: 100Hz");
+    log_i("  - INT Pin: Active Low, Latch Mode");
+    log_i("  - Data Ready Interrupt: Enabled");
+    log_i("  - IIC Master Mode: Disabled");
+    log_i("  - FIFO: Disabled");
+    log_i("mpu_init: Device is ready for use!");
+    log_i("mpu_init: ========================================");
+#endif
+    
+    return MPU_OK;
+}
 
 /******************************************************************************
  * @name    set_gyro_fsr
@@ -866,4 +1202,189 @@ static MPUXXXX_status_t read_all(void * const p_instance, mpu6050_data_t *p_data
 #endif
     
     return status;
+}
+
+/******************************************************************************
+ * @name    mpu_wakeup
+ * @brief   Wake up the MPU6050 sensor from sleep mode
+ * @param   p_instance[in] pointer to the MPU6050 driver instance
+ * @return  MPUXXXX_status_t operation status
+ *          - MPU_OK: operation completed successfully
+ *          - MPU_ERRORPARAMETER: invalid parameter
+ *          - MPU_ERROR: operation failed
+ * @note    This function ONLY wakes up the MPU6050 from sleep mode and sets
+ *          the clock source. It does NOT configure sensor parameters.
+ *          
+ *          Operations performed:
+ *          1. Clear SLEEP bit (wake up the device)
+ *          2. Set clock source to PLL with X-axis gyroscope reference (recommended)
+ *          3. Enable temperature sensor
+ *          4. Wait 100ms for sensor stabilization
+ *          
+ *          Power Management Register (0x6B) = 0x01:
+ *          - Bit 7: DEVICE_RESET = 0 (normal operation)
+ *          - Bit 6: SLEEP = 0 (wake up)
+ *          - Bit 5: CYCLE = 0 (disabled)
+ *          - Bit 3: TEMP_DIS = 0 (temperature sensor enabled)
+ *          - Bits 2-0: CLKSEL = 001 (PLL with X gyro reference)
+ *          
+ *          After wakeup, previous sensor configurations are preserved.
+ *          Use pf_set_gyro_fsr(), pf_set_accel_fsr(), pf_set_lpf(), 
+ *          pf_set_rate() to configure sensor parameters if needed.
+ *****************************************************************************/
+static MPUXXXX_status_t mpu_wakeup(void * const p_instance)
+{
+    MPUXXXX_status_t status = MPU_OK;
+    
+    /* Parameter validation */
+    if (NULL == p_instance) {
+#ifdef MPU_DEBUG
+        log_e("mpu_wakeup: instance pointer is NULL");
+#endif
+        return MPU_ERRORPARAMETER;
+    }
+    
+    /* Get IIC interface */
+    iic_driver_interface_t *p_iic = MPU_IIC_INTERFACE(p_instance);
+    void *p_bus = MPU_BUS_INSTANCE(p_instance);
+    
+    if (NULL == p_iic || NULL == p_iic->pf_iic_write_reg) {
+#ifdef MPU_DEBUG
+        log_e("mpu_wakeup: IIC interface not initialized");
+#endif
+        return MPU_ERROR;
+    }
+    
+#ifdef MPU_DEBUG
+    log_i("mpu_wakeup: waking up MPU6050...");
+#endif
+    
+#ifdef OS_SUPPORTING
+    if (NULL != p_iic->pf_critical_enter) {
+        p_iic->pf_critical_enter();
+    }
+#endif
+    
+    /* Wake up MPU6050 and set clock source
+     * PWR_MGMT_1 register (0x6B):
+     * Write 0x01: 
+     * - Clear SLEEP bit (wake up)
+     * - CLKSEL = 001 (PLL with X-axis gyroscope reference, recommended)
+     */
+    status = p_iic->pf_iic_write_reg(p_bus, MPU_ADDR, MPU_PWR_MGMT1_REG, 0x01);
+    
+#ifdef OS_SUPPORTING
+    if (NULL != p_iic->pf_critical_exit) {
+        p_iic->pf_critical_exit();
+    }
+#endif
+    
+    if (MPU_OK != status) {
+#ifdef MPU_DEBUG
+        log_e("mpu_wakeup: failed to wake up device");
+#endif
+        return status;
+    }
+    
+    /* Delay to allow sensor to stabilize after wakeup */
+    if (NULL != p_iic->pf_delay_ms) {
+        p_iic->pf_delay_ms(100);  // 100ms delay for sensor stabilization
+    }
+    
+#ifdef MPU_DEBUG
+    log_i("mpu_wakeup: MPU6050 woke up successfully");
+    log_i("  - Clock source: PLL with X-axis gyroscope");
+    log_i("  - Previous configurations preserved");
+#endif
+    
+    return MPU_OK;
+}
+
+/******************************************************************************
+ * @name    mpu_sleep
+ * @brief   Put the MPU6050 sensor into sleep mode to save power
+ * @param   p_instance[in] pointer to the MPU6050 driver instance
+ * @return  MPUXXXX_status_t operation status
+ *          - MPU_OK: operation completed successfully
+ *          - MPU_ERRORPARAMETER: invalid parameter
+ *          - MPU_ERROR: operation failed
+ * @note    This function puts the MPU6050 into sleep mode to save power.
+ *          
+ *          In sleep mode:
+ *          - Internal oscillator is stopped
+ *          - Gyroscope and accelerometer are disabled
+ *          - Temperature sensor remains active (can still be read)
+ *          - All registers can still be read/written via I2C
+ *          - Typical current consumption: ~8µA (vs ~3.8mA in normal mode)
+ *          - **Sensor configurations are preserved** (FSR, DLPF, sample rate, etc.)
+ *          
+ *          Power Management Register (0x6B) = 0x40:
+ *          - Bit 6: SLEEP = 1 (enter sleep mode)
+ *          
+ *          To wake up the device, call pf_wakeup() or mpu_wakeup().
+ *          Previous configurations will be preserved after wakeup.
+ *****************************************************************************/
+static MPUXXXX_status_t mpu_sleep(void * const p_instance)
+{
+    MPUXXXX_status_t status = MPU_OK;
+    
+    /* Parameter validation */
+    if (NULL == p_instance) {
+#ifdef MPU_DEBUG
+        log_e("mpu_sleep: instance pointer is NULL");
+#endif
+        return MPU_ERRORPARAMETER;
+    }
+    
+    /* Get IIC interface */
+    iic_driver_interface_t *p_iic = MPU_IIC_INTERFACE(p_instance);
+    void *p_bus = MPU_BUS_INSTANCE(p_instance);
+    
+    if (NULL == p_iic || NULL == p_iic->pf_iic_write_reg) {
+#ifdef MPU_DEBUG
+        log_e("mpu_sleep: IIC interface not initialized");
+#endif
+        return MPU_ERROR;
+    }
+    
+#ifdef MPU_DEBUG
+    log_i("mpu_sleep: putting MPU6050 into sleep mode...");
+#endif
+    
+#ifdef OS_SUPPORTING
+    if (NULL != p_iic->pf_critical_enter) {
+        p_iic->pf_critical_enter();
+    }
+#endif
+    
+    /* Enter sleep mode by setting SLEEP bit in PWR_MGMT_1 register (0x6B)
+     * Write 0x40:
+     * - Bit 6: SLEEP = 1 (enter sleep mode)
+     * - Other bits = 0 (reset to default, will lose clock source setting)
+     * 
+     * Note: Writing 0x40 clears CLKSEL bits. When waking up, pf_wakeup()
+     * will restore the recommended clock source (PLL with X gyro).
+     */
+    status = p_iic->pf_iic_write_reg(p_bus, MPU_ADDR, MPU_PWR_MGMT1_REG, 0x40);
+    
+#ifdef OS_SUPPORTING
+    if (NULL != p_iic->pf_critical_exit) {
+        p_iic->pf_critical_exit();
+    }
+#endif
+    
+    if (MPU_OK != status) {
+#ifdef MPU_DEBUG
+        log_e("mpu_sleep: failed to enter sleep mode");
+#endif
+        return status;
+    }
+    
+#ifdef MPU_DEBUG
+    log_i("mpu_sleep: MPU6050 entered sleep mode successfully");
+    log_i("  - Power consumption: ~3.8mA → ~8µA (reduced 475x)");
+    log_i("  - Call pf_wakeup() to wake up the device");
+#endif
+    
+    return MPU_OK;
 }

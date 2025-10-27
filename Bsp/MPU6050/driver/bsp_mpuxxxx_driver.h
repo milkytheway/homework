@@ -156,8 +156,8 @@ typedef struct
     /* basic functions */
     MPUXXXX_status_t (*pf_init)           (void * const);
     MPUXXXX_status_t (*pf_deinit)         (void * const);
-    MPUXXXX_status_t (*pf_start)          (void * const);
-    MPUXXXX_status_t (*pf_stop)           (void * const);
+    MPUXXXX_status_t (*pf_wakeup)         (void * const);
+    MPUXXXX_status_t (*pf_sleep)          (void * const);
     MPUXXXX_status_t (*pf_read_id)        (void * const);
     MPUXXXX_status_t (*pf_check_data_ready) (void * const, bool *ready);
 
