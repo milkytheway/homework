@@ -60,6 +60,7 @@ typedef struct
     MPUXXXX_status_t (*pf_iic_send_nack)      (void *);
     MPUXXXX_status_t (*pf_iic_write_reg)      (void *, uint8_t daddr,uint8_t reg,uint8_t data);
     MPUXXXX_status_t (*pf_iic_read_reg)       (void *, uint8_t daddr,uint8_t reg);
+    MPUXXXX_status_t (*pf_iic_read_multi_byte)(void *, uint8_t daddr,uint8_t reg,uint8_t length,uint8_t buff[]);
 
     void (*pf_delay_ms)           (uint32_t);
 

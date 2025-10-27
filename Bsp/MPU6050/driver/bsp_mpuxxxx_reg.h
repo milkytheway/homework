@@ -37,7 +37,7 @@
 #define MPU_INT_EN_REG           0x38    // 中断使能寄存器
 #define MPU_INT_STA_REG          0x3A    // 中断状态寄存器
 
-// 加速度计数据输出寄存器（修正后的地址）
+// 加速度计数据输出寄存器
 #define MPU_ACCEL_XOUTH_REG      0x3B    // 加速度值，X轴高8位寄存器
 #define MPU_ACCEL_XOUTL_REG      0x3C    // 加速度值，X轴低8位寄存器
 #define MPU_ACCEL_YOUTH_REG      0x3D    // 加速度值，Y轴高8位寄存器
@@ -45,11 +45,11 @@
 #define MPU_ACCEL_ZOUTH_REG      0x3F    // 加速度值，Z轴高8位寄存器
 #define MPU_ACCEL_ZOUTL_REG      0x40    // 加速度值，Z轴低8位寄存器
 
-// 温度传感器数据输出寄存器（修正后的地址）
+// 温度传感器数据输出寄存器
 #define MPU_TEMP_OUTH_REG        0x41    // 温度值高8位寄存器
 #define MPU_TEMP_OUTL_REG        0x42    // 温度值低8位寄存器
 
-// 陀螺仪数据输出寄存器（修正后的地址）
+// 陀螺仪数据输出寄存器
 #define MPU_GYRO_XOUTH_REG       0x43    // 陀螺仪值，X轴高8位寄存器
 #define MPU_GYRO_XOUTL_REG       0x44    // 陀螺仪值，X轴低8位寄存器
 #define MPU_GYRO_YOUTH_REG       0x45    // 陀螺仪值，Y轴高8位寄存器
@@ -59,7 +59,7 @@
 
 #define MPU_MOT_DET_STA_REG      0x61    // 运动检测状态寄存器
 
-// IIC从机数据输出寄存器（修正后的地址）
+// IIC从机数据输出寄存器
 #define MPU_I2CSLV0_DO_REG       0x63    // IIC从机0数据输出寄存器
 #define MPU_I2CSLV1_DO_REG       0x64    // IIC从机1数据输出寄存器
 #define MPU_I2CSLV2_DO_REG       0x65    // IIC从机2数据输出寄存器
