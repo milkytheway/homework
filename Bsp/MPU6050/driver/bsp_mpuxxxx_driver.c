@@ -82,7 +82,9 @@
 
  //********************** private function prototypes ************************//
 static MPUXXXX_status_t read_id(void * const p_instance, uint8_t *p_id);
+static MPUXXXX_status_t mpu_read_id(void * const p_instance);
 static MPUXXXX_status_t mpu_init(void * const p_instance);
+static MPUXXXX_status_t mpu_deinit(void * const p_instance);
 static MPUXXXX_status_t set_gyro_fsr(void * const p_instance, uint8_t fsr);
 static MPUXXXX_status_t set_accel_fsr(void * const p_instance, uint8_t fsr);
 static MPUXXXX_status_t set_lpf(void * const p_instance);
@@ -1056,7 +1058,7 @@ static MPUXXXX_status_t read_temp(void * const p_instance, mpu6050_data_t *p_dat
      * - Sensitivity: 340 LSB/°C
      * - Offset: 36.53°C (at 0 LSB, temperature is -36.53°C)
      */
-    p_data->tempreture = ((float)temp_raw / MPU_TEMP_SENSITIVITY) + MPU_TEMP_OFFSET;
+    p_data->tempreture = ((float)temp_raw / 340.0f) + 36.53f;
     
 #ifdef MPU_DEBUG
     log_d("read_temp: raw[%d] temp[%.2f°C]", temp_raw, p_data->tempreture);
@@ -1178,7 +1180,7 @@ static MPUXXXX_status_t read_all(void * const p_instance, mpu6050_data_t *p_data
     temp_raw = (int16_t)((buffer[6] << 8) | buffer[7]);
     
     /* Convert temperature raw data to °C */
-    p_data->tempreture = ((float)temp_raw / MPU_TEMP_SENSITIVITY) + MPU_TEMP_OFFSET;
+    p_data->tempreture = ((float)temp_raw / 340.0f) + 36.53f;
     
     /* Parse gyroscope data (bytes 8-13) */
     p_data->gyro_x_raw = (int16_t)((buffer[8] << 8) | buffer[9]);
@@ -1191,10 +1193,10 @@ static MPUXXXX_status_t read_all(void * const p_instance, mpu6050_data_t *p_data
     p_data->gz = (double)p_data->gyro_z_raw / MPU_DEFAULT_GYRO_SENS;
     
 #ifdef MPU_DEBUG
-    log_d("read_all: accel[%d,%d,%d] temp[%d] gyro[%d,%d,%d]",
-          p_data->accel_x_raw, p_data->accel_y_raw, p_data->accel_z_raw,
-          temp_raw,
-          p_data->gyro_x_raw, p_data->gyro_y_raw, p_data->gyro_z_raw);
+    // log_d("read_all: accel[%d,%d,%d] temp[%d] gyro[%d,%d,%d]",
+        //   p_data->accel_x_raw, p_data->accel_y_raw, p_data->accel_z_raw,
+        //   temp_raw,
+        //   p_data->gyro_x_raw, p_data->gyro_y_raw, p_data->gyro_z_raw);
     log_d("read_all: ax[%.3f,%.3f,%.3f]g temp[%.2f°C] gyro[%.3f,%.3f,%.3f]°/s",
           p_data->ax, p_data->ay, p_data->az,
           p_data->tempreture,
@@ -1382,8 +1384,160 @@ static MPUXXXX_status_t mpu_sleep(void * const p_instance)
     
 #ifdef MPU_DEBUG
     log_i("mpu_sleep: MPU6050 entered sleep mode successfully");
-    log_i("  - Power consumption: ~3.8mA → ~8µA (reduced 475x)");
+    log_i("  - Power consumption: ~3.8mA -> ~8uA (reduced 475x)");
     log_i("  - Call pf_wakeup() to wake up the device");
+#endif
+    
+    return MPU_OK;
+}
+
+/******************************************************************************
+ * @name    mpu_read_id
+ * @brief   Read and log the device ID (interface wrapper)
+ * @param   p_instance[in] pointer to the MPU6050 driver instance
+ * @return  MPUXXXX_status_t operation status
+ * @note    This is a wrapper function to match the pf_read_id interface signature.
+ *          It reads the device ID and logs it, but doesn't return the ID value.
+ *****************************************************************************/
+static MPUXXXX_status_t mpu_read_id(void * const p_instance)
+{
+    uint8_t device_id = 0;
+    MPUXXXX_status_t status;
+    
+    status = read_id(p_instance, &device_id);
+    
+    if (MPU_OK == status) {
+#ifdef MPU_DEBUG
+        log_i("mpu_read_id: Device ID = 0x%02X", device_id);
+#endif
+    }
+    
+    return status;
+}
+
+/******************************************************************************
+ * @name    mpu_deinit
+ * @brief   Deinitialize the MPU6050 sensor
+ * @param   p_instance[in] pointer to the MPU6050 driver instance
+ * @return  MPUXXXX_status_t operation status
+ * @note    This function can be used to perform cleanup operations if needed.
+ *          Currently it just returns success.
+ *****************************************************************************/
+static MPUXXXX_status_t mpu_deinit(void * const p_instance)
+{
+    (void)p_instance;  // Unused parameter
+    
+#ifdef MPU_DEBUG
+    log_i("mpu_deinit: MPU6050 deinitialized");
+#endif
+    
+    return MPU_OK;
+}
+
+/******************************************************************************
+ * @name    mpuxxxx_inst
+ * @brief   Constructor function to initialize the MPU6050 driver instance
+ * @param   mpuxxxx_driver[out] pointer to the driver instance to initialize
+ * @param   iic_interface[in] pointer to IIC driver interface
+ * @param   p_bus_instance[in] pointer to IIC bus instance
+ * @param   p_timebase_interface[in] pointer to timebase interface
+ * @param   p_os_interface[in] pointer to OS interface (if OS_SUPPORTING enabled)
+ * @param   interuption_interface[in] pointer to interrupt interface
+ * @return  MPUXXXX_status_t operation status
+ *          - MPU_OK: initialization completed successfully
+ *          - MPU_ERRORPARAMETER: invalid parameter
+ * @note    This function initializes the driver structure by:
+ *          1. Validating all required parameters
+ *          2. Storing interface pointers
+ *          3. Binding all private functions to function pointers
+ *          
+ *          After calling this function, the driver instance is ready to use.
+ *          Call mpuxxxx_driver->pf_init() to initialize the hardware.
+ *          
+ *          Example usage:
+ *          @code
+ *          bsp_mpuxxxx_driver mpu_driver;
+ *          mpuxxxx_inst(&mpu_driver, &iic_if, &bus, &timebase, &os, &int_if);
+ *          mpu_driver.pf_init(&mpu_driver);
+ *          @endcode
+ *****************************************************************************/
+MPUXXXX_status_t mpuxxxx_inst(
+        bsp_mpuxxxx_driver *             const mpuxxxx_driver,
+        iic_driver_interface_t *          const iic_interface,
+        void *                           const p_bus_instance,
+        timebase_interface_t *     const p_timebase_interface,
+#ifdef OS_SUPPORTING
+        os_interface_t *           const p_os_interface,
+#endif
+        interuption_interface_t * const interuption_interface
+)
+{
+#ifdef MPU_DEBUG
+    log_i("mpuxxxx_inst: Initializing MPU6050 driver instance...");
+#endif
+    
+    /* Parameter validation */
+    if (NULL == mpuxxxx_driver) {
+#ifdef MPU_DEBUG
+        log_e("mpuxxxx_inst: driver instance pointer is NULL");
+#endif
+        return MPU_ERRORPARAMETER;
+    }
+    
+    if (NULL == iic_interface) {
+#ifdef MPU_DEBUG
+        log_e("mpuxxxx_inst: IIC interface pointer is NULL");
+#endif
+        return MPU_ERRORPARAMETER;
+    }
+    
+    if (NULL == p_bus_instance) {
+#ifdef MPU_DEBUG
+        log_e("mpuxxxx_inst: bus instance pointer is NULL");
+#endif
+        return MPU_ERRORPARAMETER;
+    }
+    
+    /* Store interface pointers */
+    mpuxxxx_driver->iic_interface =         iic_interface;
+    mpuxxxx_driver->p_bus_instance =        p_bus_instance;
+    mpuxxxx_driver->p_timebase_interface =  p_timebase_interface;
+    mpuxxxx_driver->interuption_interface = interuption_interface;
+    
+#ifdef OS_SUPPORTING
+    mpuxxxx_driver->p_os_interface =            p_os_interface;
+    mpuxxxx_driver->p_buffer_interface =        NULL;  // Not used currently
+    mpuxxxx_driver->semaphore_mutex_handle =    NULL;
+    mpuxxxx_driver->semaphore_binary_handle =   NULL;
+    mpuxxxx_driver->pf_dma_complete_callback =  NULL;
+    mpuxxxx_driver->pf_int_interrupt_callback = NULL;
+    mpuxxxx_driver->queue_handle = NULL;
+#endif
+    
+    /* Bind basic functions */
+    mpuxxxx_driver->pf_init =               mpu_init;
+    mpuxxxx_driver->pf_deinit =             mpu_deinit;
+    mpuxxxx_driver->pf_wakeup =             mpu_wakeup;
+    mpuxxxx_driver->pf_sleep =              mpu_sleep;
+    mpuxxxx_driver->pf_read_id =            mpu_read_id;
+    mpuxxxx_driver->pf_check_data_ready =   NULL;  // TODO: implement later
+    
+    /* Bind configuration functions */
+    mpuxxxx_driver->pf_set_gyro_fsr =       set_gyro_fsr;
+    mpuxxxx_driver->pf_set_accel_fsr =      set_accel_fsr;
+    mpuxxxx_driver->pf_set_lpf =            set_lpf;
+    mpuxxxx_driver->pf_set_rate =           set_rate;
+    
+    /* Bind data reading functions */
+    mpuxxxx_driver->pf_read_accel =         read_accel;
+    mpuxxxx_driver->pf_read_gyro =          read_gyro;
+    mpuxxxx_driver->pf_read_temp =          read_temp;
+    mpuxxxx_driver->pf_read_all =           read_all;
+    
+#ifdef MPU_DEBUG
+    log_i("mpuxxxx_inst: Driver instance initialized successfully");
+    log_i("  - All function pointers bound");
+    log_i("  - Ready to call pf_init() for hardware initialization");
 #endif
     
     return MPU_OK;

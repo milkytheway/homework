@@ -27,7 +27,7 @@
 //******************************** Includes *********************************//
 
 //********************** private macro definitions **************************//
-#define OS_SUPPORTING
+//#define OS_SUPPORTING
 //********************** private macro definitions **************************//
 
 //******************************** variables ********************************//
@@ -202,4 +202,4 @@ MPUXXXX_status_t mpuxxxx_inst(
 );
 //***************************** class definition ***************************//
 
- #endif /* __EC_BSP_MPUXXXX_H__ */
+#endif /* __EC_BSP_MPUXXXX_H__ */

@@ -26,8 +26,6 @@
 /* USER CODE BEGIN Includes */
 #include "core_cm4.h"
 #include "iic_hal.h"
-#include "ec_bsp_aht21_driver.h"
-
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -194,71 +192,73 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-// void IIC_test1(void)
-// {
-// 	unsigned char ACKflag = 0xFF;
+#if 0
+void IIC_test1(void)
+{
+	unsigned char ACKflag = 0xFF;
 
-// 	IICInit(&AHT_bus);
-//   IICStart(&AHT_bus);
-//   IICSendByte(&AHT_bus, 0x38<<1);
-//   ACKflag = IICWaitAck(&AHT_bus);
-//   IICStop(&AHT_bus);
+	IICInit(&AHT_bus);
+  IICStart(&AHT_bus);
+  IICSendByte(&AHT_bus, 0x38<<1);
+  ACKflag = IICWaitAck(&AHT_bus);
+  IICStop(&AHT_bus);
 
-//   if(ACKflag == 0) {
-//     printf("AHT20 ACK\r\n");
-//   } else {
-//     printf("AHT20 NACK\r\n");
-//   }
-// }
+  if(ACKflag == 0) {
+    printf("AHT20 ACK\r\n");
+  } else {
+    printf("AHT20 NACK\r\n");
+  }
+}
 
-// void aht21_driver_test(void)
-// {
-//   iic_driver_interface_t iic_interface;
-//   iic_interface.pf_iic_init         = IICInit;
-//   iic_interface.pf_iic_deinit       = NULL;
-//   iic_interface.pf_iic_start        = IICStart;
-//   iic_interface.pf_iic_stop         = IICStop;
-//   iic_interface.pf_iic_send_byte    = IICSendByte;
-//   iic_interface.pf_iic_receive_byte = IICReceiveByte;
-//   iic_interface.pf_iic_wait_ack     = IICWaitAck;
-//   iic_interface.pf_iic_send_ack     = IICSendAck;
-//   iic_interface.pf_iic_send_nack    = IICSendNotAck;
-//   iic_interface.pf_delay_ms         = delay_ms;
+void aht21_driver_test(void)
+{
+  iic_driver_interface_t iic_interface;
+  iic_interface.pf_iic_init         = IICInit;
+  iic_interface.pf_iic_deinit       = NULL;
+  iic_interface.pf_iic_start        = IICStart;
+  iic_interface.pf_iic_stop         = IICStop;
+  iic_interface.pf_iic_send_byte    = IICSendByte;
+  iic_interface.pf_iic_receive_byte = IICReceiveByte;
+  iic_interface.pf_iic_wait_ack     = IICWaitAck;
+  iic_interface.pf_iic_send_ack     = IICSendAck;
+  iic_interface.pf_iic_send_nack    = IICSendNotAck;
+  iic_interface.pf_delay_ms         = delay_ms;
 
-//   timebase_interface_t timebase_interface;
-//   timebase_interface.pf_get_tick_count = HAL_GetTick;
+  timebase_interface_t timebase_interface;
+  timebase_interface.pf_get_tick_count = HAL_GetTick;
 
-//   bsp_aht21_driver_t AHT21;
-//   float temperature = 0.0f;
-//   float humidity = 0.0f;
+  bsp_aht21_driver_t AHT21;
+  float temperature = 0.0f;
+  float humidity = 0.0f;
 
-//   AHT21_status_t ret;
-//   ret = aht21_inst(&AHT21,
-//                    &iic_interface,
-// 									 NULL,
-//                    &timebase_interface);
+  AHT21_status_t ret;
+  ret = aht21_inst(&AHT21,
+                   &iic_interface,
+									 NULL,
+                   &timebase_interface);
 
-//   if(AHT21_OK != ret)
-//   {
-//       printf("AHT21 init failed\r\n");
-//   }
-//   else
-//   {
-//       printf("AHT21 init success\r\n");
-//   }
+  if(AHT21_OK != ret)
+  {
+      printf("AHT21 init failed\r\n");
+  }
+  else
+  {
+      printf("AHT21 init success\r\n");
+  }
 
-//   AHT21_status_t status;
-//   status = AHT21.pf_read_temp_humi(&AHT21, &temperature, &humidity);
-//   if(AHT21_OK != status)
-//   {
-//       printf("AHT21 read temp humi failed\r\n");
-//   }
-//   else
-//   {
-//       printf("AHT21 read temp humi success\r\n");
-//       printf("Temperature: %.2f C, Humidity: %.2f %%\r\n", temperature, humidity);
-//   }
-// }
+  AHT21_status_t status;
+  status = AHT21.pf_read_temp_humi(&AHT21, &temperature, &humidity);
+  if(AHT21_OK != status)
+  {
+      printf("AHT21 read temp humi failed\r\n");
+  }
+  else
+  {
+      printf("AHT21 read temp humi success\r\n");
+      printf("Temperature: %.2f C, Humidity: %.2f %%\r\n", temperature, humidity);
+  }
+}
+#endif
 /* USER CODE END 4 */
 
 /**
