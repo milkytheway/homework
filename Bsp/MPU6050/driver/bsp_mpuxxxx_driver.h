@@ -28,6 +28,23 @@
 
 //********************** private macro definitions **************************//
 //#define OS_SUPPORTING
+
+/**
+ * Hardware I2C + DMA Mode Configuration
+ * 
+ * Define HARDWARE_IIC to enable DMA mode:
+ *   - Uses hardware I2C peripheral with DMA support
+ *   - Requires pf_iic_read_dma implementation
+ *   - Data automatically transferred to dma_buffer
+ *   - Lower CPU usage, faster response
+ * 
+ * Comment out HARDWARE_IIC to use software I2C mode:
+ *   - Uses GPIO bit-banging I2C
+ *   - No DMA support needed
+ *   - Task actively reads data using pf_read_all()
+ *   - More flexible, works without hardware I2C peripheral
+ */
+//#define HARDWARE_IIC  // Uncomment for Hardware I2C + DMA mode
 //********************** private macro definitions **************************//
 
 //******************************** variables ********************************//
@@ -61,6 +78,11 @@ typedef struct
     MPUXXXX_status_t (*pf_iic_write_reg)      (void *, uint8_t daddr,uint8_t reg,uint8_t data);
     MPUXXXX_status_t (*pf_iic_read_reg)       (void *, uint8_t daddr,uint8_t reg);
     MPUXXXX_status_t (*pf_iic_read_multi_byte)(void *, uint8_t daddr,uint8_t reg,uint8_t length,uint8_t buff[]);
+
+#ifdef HARDWARE_IIC
+    /* DMA read function for hardware I2C mode only */
+    MPUXXXX_status_t (*pf_iic_read_dma)(void *, uint8_t daddr, uint8_t reg, uint8_t length, uint8_t *buff);
+#endif
 
     void (*pf_delay_ms)           (uint32_t);
 
@@ -184,10 +206,27 @@ typedef struct
 #ifdef OS_SUPPORTING
     void *semaphore_mutex_handle;
     void *semaphore_binary_handle;
-    void (*pf_dma_complete_callback) (void);
-    void (*pf_int_interrupt_callback) (void);
     void *queue_handle;
 #endif
+
+#ifdef HARDWARE_IIC
+    /* DMA transfer state and buffer (Hardware I2C + DMA mode only)
+     * Each instance has its own DMA buffer and state for true multi-instance support
+     */
+    uint8_t dma_buffer[14] __attribute__((aligned(4)));  // 14 bytes: Accel(6) + Temp(2) + Gyro(6)
+    volatile bool dma_busy;                               // DMA transfer in progress flag
+    
+    /* DMA complete callback for hardware I2C + DMA mode
+     * Called when DMA completes transferring data to dma_buffer
+     */
+    void (*pf_dma_complete_callback)(void);
+#endif
+    
+    /* INT interrupt callback
+     * Hardware I2C mode: Optional, for statistics/debugging (data already transferred by DMA)
+     * Software I2C mode: Required, notifies task to actively read data
+     */
+    void (*pf_int_interrupt_callback)(void);
 } bsp_mpuxxxx_driver;
 
 MPUXXXX_status_t mpuxxxx_inst(
@@ -201,5 +240,99 @@ MPUXXXX_status_t mpuxxxx_inst(
         interuption_interface_t * const interuption_interface
 );
 //***************************** class definition ***************************//
+
+//***************************** interrupt callbacks ************************//
+/**
+ * @brief   Hardware INT pin interrupt callback (Data Ready)
+ * @param   p_instance Pointer to MPU driver instance that triggered the interrupt
+ * @note    Called when MPU6050 INT pin triggers hardware interrupt.
+ *          
+ *          HARDWARE_IIC mode (DMA):
+ *            - Starts DMA transfer to dma_buffer
+ *            - Optionally calls pf_int_interrupt_callback (for statistics)
+ *            - Data will be ready after mpu_dma_interrupt_callback
+ *          
+ *          Software I2C mode (Polling):
+ *            - Calls pf_int_interrupt_callback to notify task
+ *            - Task should use pf_read_all() to fetch data
+ *          
+ *          User must call this from hardware interrupt handler and pass
+ *          the correct instance pointer.
+ */
+void mpu_int_interrupt_callback(bsp_mpuxxxx_driver *p_instance);
+
+#ifdef HARDWARE_IIC
+/**
+ * @brief   DMA transfer complete interrupt callback (Hardware I2C mode only)
+ * @param   p_instance Pointer to MPU driver instance that completed DMA
+ * @note    Called when DMA completes transferring sensor data to memory.
+ *          Calls registered pf_dma_complete_callback to notify data ready.
+ *          
+ *          User must call this from DMA complete interrupt handler and pass
+ *          the correct instance pointer.
+ *          
+ *          Only available when HARDWARE_IIC is defined.
+ */
+void mpu_dma_interrupt_callback(bsp_mpuxxxx_driver *p_instance);
+#endif
+
+/**
+ * @brief   Register callback for INT interrupt
+ * @param   p_instance Pointer to MPU driver instance
+ * @param   callback Function pointer to ISR-safe callback
+ * @return  MPUXXXX_status_t operation status
+ * @note    HARDWARE_IIC mode: Optional, for statistics/debugging
+ *          Software I2C mode: Required, notifies task to read data
+ *          
+ *          Alternatively, can directly assign to p_instance->pf_int_interrupt_callback.
+ */
+MPUXXXX_status_t mpu_register_int_callback(
+    bsp_mpuxxxx_driver *p_instance,
+    void (*callback)(void));
+
+#ifdef HARDWARE_IIC
+/**
+ * @brief   Register callback for DMA complete interrupt (Hardware I2C mode only)
+ * @param   p_instance Pointer to MPU driver instance
+ * @param   callback Function pointer to ISR-safe callback
+ * @return  MPUXXXX_status_t operation status
+ * @note    Required for HARDWARE_IIC mode.
+ *          Callback should perform OS-specific operations (TaskNotify, Queue, etc).
+ *          
+ *          Alternatively, can directly assign to p_instance->pf_dma_complete_callback.
+ *          
+ *          Only available when HARDWARE_IIC is defined.
+ */
+MPUXXXX_status_t mpu_register_dma_complete_callback(
+    bsp_mpuxxxx_driver *p_instance,
+    void (*callback)(void));
+
+/**
+ * @brief   Get pointer to DMA buffer of specific instance (Hardware I2C mode only)
+ * @param   p_instance Pointer to MPU driver instance
+ * @return  Pointer to 14-byte DMA buffer containing sensor data, or NULL if invalid
+ * @note    Data processing task uses this to access raw sensor data.
+ *          Each instance has its own independent DMA buffer.
+ *          
+ *          Only available when HARDWARE_IIC is defined.
+ */
+uint8_t* mpu_get_dma_buffer(bsp_mpuxxxx_driver *p_instance);
+
+/**
+ * @brief   Get DMA buffer length (Hardware I2C mode only)
+ * @return  Length of DMA buffer (14 bytes)
+ * @note    Only available when HARDWARE_IIC is defined.
+ */
+uint8_t mpu_get_dma_buffer_length(void);
+
+/**
+ * @brief   Check if DMA is currently busy for specific instance (Hardware I2C mode only)
+ * @param   p_instance Pointer to MPU driver instance
+ * @return  true if DMA transfer in progress, false otherwise
+ * @note    Only available when HARDWARE_IIC is defined.
+ */
+bool mpu_is_dma_busy(bsp_mpuxxxx_driver *p_instance);
+#endif
+//***************************** interrupt callbacks ************************//
 
 #endif /* __EC_BSP_MPUXXXX_H__ */

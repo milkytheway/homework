@@ -78,6 +78,9 @@
 /* Temperature Sensor Conversion */
 #define MPU_TEMP_SENSITIVITY            340.0   // LSB/°C
 #define MPU_TEMP_OFFSET                 36.53   // °C
+
+/* MPU6050 data length for DMA transfer (14 bytes) */
+#define MPU_DATA_LENGTH                 14      // Accel(6) + Temp(2) + Gyro(6)
  //********************** private macro definitions **************************//
 
  //********************** private function prototypes ************************//
@@ -1509,10 +1512,31 @@ MPUXXXX_status_t mpuxxxx_inst(
     mpuxxxx_driver->p_buffer_interface =        NULL;  // Not used currently
     mpuxxxx_driver->semaphore_mutex_handle =    NULL;
     mpuxxxx_driver->semaphore_binary_handle =   NULL;
-    mpuxxxx_driver->pf_dma_complete_callback =  NULL;
-    mpuxxxx_driver->pf_int_interrupt_callback = NULL;
     mpuxxxx_driver->queue_handle = NULL;
 #endif
+    
+#ifdef HARDWARE_IIC
+    /* Initialize DMA state and buffer (Hardware I2C + DMA mode)
+     * Each instance has its own independent DMA buffer and busy flag
+     * This enables true multi-instance support
+     */
+    mpuxxxx_driver->dma_busy = false;
+    for (uint8_t i = 0; i < MPU_DATA_LENGTH; i++) {
+        mpuxxxx_driver->dma_buffer[i] = 0;
+    }
+    
+    /* Initialize DMA complete callback to NULL */
+    mpuxxxx_driver->pf_dma_complete_callback = NULL;
+#endif
+    
+    /* Initialize INT interrupt callback to NULL
+     * Upper layer will register callback using mpu_register_int_callback()
+     * or by directly assigning to pf_int_interrupt_callback
+     * 
+     * HARDWARE_IIC mode: Optional (for statistics/debugging)
+     * Software I2C mode: Required (to notify task to read data)
+     */
+    mpuxxxx_driver->pf_int_interrupt_callback = NULL;
     
     /* Bind basic functions */
     mpuxxxx_driver->pf_init =               mpu_init;
@@ -1542,3 +1566,396 @@ MPUXXXX_status_t mpuxxxx_inst(
     
     return MPU_OK;
 }
+
+/******************************************************************************
+ * @name    mpu_int_interrupt_callback
+ * @brief   Hardware interrupt callback function triggered by MPU6050 INT pin
+ * @param   p_instance[in] Pointer to the MPU driver instance that triggered interrupt
+ * @return  None
+ * @note    This function is called when the MPU6050 INT pin triggers a hardware
+ *          interrupt, indicating that new sensor data is ready to be read.
+ *          
+ *          **Design Principle: Fast In, Fast Out**
+ *          - Minimal operations in ISR context
+ *          - No I2C read of INT_STATUS register (configured as "clear on any read")
+ *          - No OS-specific operations in driver layer
+ *          - Simply initiates DMA transfer and calls upper layer callback
+ *          
+ *          **Workflow**:
+ *          1. Validate instance pointer
+ *          2. Check if this instance's DMA is busy (prevent concurrent transfers)
+ *          3. If not busy, start DMA transfer to read 14 bytes from MPU6050
+ *          4. Set this instance's DMA busy flag
+ *          5. Call this instance's registered callback (optional)
+ *          6. Return immediately
+ *          
+ *          **Decoupling from OS**:
+ *          - This function does NOT use any FreeRTOS APIs
+ *          - Upper layer can register a callback to perform OS-specific operations
+ *          
+ *          **Multi-Instance Support**:
+ *          - Each instance has its own DMA buffer and busy flag
+ *          - User must pass correct instance pointer from hardware interrupt
+ *          - Multiple MPU6050 devices can operate independently
+ *          
+ *          **DMA Transfer Details**:
+ *          - Source: MPU6050 registers 0x3B-0x48 (14 bytes)
+ *          - Destination: p_instance->dma_buffer[14]
+ *          - Transfer method: I2C DMA mode
+ *          
+ * @warning This function runs in ISR context. DO NOT:
+ *          - Perform I2C read/write operations directly
+ *          - Process or parse sensor data
+ *          - Use blocking operations
+ *          - Call printf or log functions
+ *****************************************************************************/
+void mpu_int_interrupt_callback(bsp_mpuxxxx_driver *p_instance)
+{
+    /* Validate instance pointer */
+    if (p_instance == NULL) {
+        return;
+    }
+    
+#ifdef HARDWARE_IIC
+    /* ========== Hardware I2C + DMA Mode ========== */
+    
+    /* Check if this instance's DMA is currently busy */
+    if (p_instance->dma_busy) {
+        /* DMA still busy, cannot start new transfer
+         * This data point will be dropped
+         * In a properly configured system with matching sample rates,
+         * this should rarely occur
+         */
+        return;
+    }
+    
+    /* Set this instance's DMA busy flag before starting transfer */
+    p_instance->dma_busy = true;
+    
+    /* Start DMA transfer to read 14 bytes from MPU6050 to this instance's buffer
+     * 
+     * The DMA function should be implemented in IIC interface as pf_iic_read_dma
+     * 
+     * Example implementation:
+     *   MPUXXXX_status_t hardware_iic_read_dma(...) {
+     *       I2C_HandleTypeDef *hi2c = (I2C_HandleTypeDef *)p_bus;
+     *       HAL_I2C_Mem_Read_DMA(hi2c, daddr << 1, reg,
+     *                           I2C_MEMADD_SIZE_8BIT, buffer, length);
+     *       return MPU_OK;
+     *   }
+     */
+    if (p_instance->iic_interface != NULL &&
+        p_instance->iic_interface->pf_iic_read_dma != NULL) {
+        
+        MPUXXXX_status_t status = p_instance->iic_interface->pf_iic_read_dma(
+            p_instance->p_bus_instance,
+            MPU_ADDR,
+            MPU_ACCEL_XOUTH_REG,
+            MPU_DATA_LENGTH,
+            p_instance->dma_buffer
+        );
+        
+        /* If DMA start failed, clear busy flag */
+        if (status != MPU_OK) {
+            p_instance->dma_busy = false;
+        }
+    } else {
+        /* DMA function not available, clear busy flag */
+        p_instance->dma_busy = false;
+    }
+    
+    /* Optional: Call INT callback for statistics/debugging */
+    if (p_instance->pf_int_interrupt_callback != NULL) {
+        p_instance->pf_int_interrupt_callback();
+    }
+    
+    /* ISR exits here - DMA hardware will transfer data in background
+     * When DMA completes, mpu_dma_interrupt_callback(p_instance) will be called
+     */
+    
+#else
+    /* ========== Software I2C Mode (Polling) ========== */
+    
+    /* No DMA support, notify application layer to actively read data
+     * 
+     * Application layer callback should:
+     * - Use xTaskNotifyFromISR() or similar to wake data processing task
+     * - Data processing task then calls pf_read_all() to fetch sensor data
+     * 
+     * Example:
+     *   void app_mpu_int_callback(void) {
+     *       BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+     *       xTaskNotifyFromISR(data_task_handle, 0x01, eSetBits,
+     *                         &xHigherPriorityTaskWoken);
+     *       portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+     *   }
+     */
+    if (p_instance->pf_int_interrupt_callback != NULL) {
+        p_instance->pf_int_interrupt_callback();
+    }
+    
+#endif /* HARDWARE_IIC */
+}
+
+#ifdef HARDWARE_IIC
+/******************************************************************************
+ * @name    mpu_dma_interrupt_callback
+ * @brief   DMA transfer complete interrupt callback function (Hardware I2C mode only)
+ * @param   p_instance[in] Pointer to the MPU driver instance that completed DMA
+ * @return  None
+ * @note    This function is called when the DMA controller completes transferring
+ *          14 bytes of sensor data from MPU6050 to memory (p_instance->dma_buffer).
+ *          
+ *          **Design Principle: Fast In, Fast Out**
+ *          - Minimal operations in ISR context
+ *          - No OS-specific operations in driver layer
+ *          - Simply clears flag and calls upper layer callback
+ *          
+ *          **Workflow**:
+ *          1. Validate instance pointer
+ *          2. Clear this instance's DMA busy flag to allow next transfer
+ *          3. Call this instance's registered callback to notify upper layer
+ *          4. Return immediately
+ *          
+ *          **Decoupling from OS**:
+ *          - This function does NOT use any FreeRTOS APIs
+ *          - Upper layer registers a callback to perform OS-specific operations:
+ *            * TaskNotify to wake data processing task
+ *            * Send to queue
+ *            * Set event group bits
+ *            * Release semaphore
+ *          
+ *          **Multi-Instance Support**:
+ *          - Each instance has its own DMA buffer and callback
+ *          - User must pass correct instance pointer from DMA interrupt
+ *          - Multiple MPU6050 devices can have independent DMA operations
+ *          
+ *          **Upper Layer Responsibility**:
+ *          - Parse p_instance->dma_buffer into sensor data structure
+ *          - Apply calibration/filtering
+ *          - Send processed data to application tasks
+ *          
+ * @warning This function runs in ISR context. DO NOT:
+ *          - Parse or process sensor data
+ *          - Perform calculations or conversions
+ *          - Use blocking operations
+ *          - Call printf or log functions
+ *          
+ *          Only available when HARDWARE_IIC is defined.
+ *****************************************************************************/
+void mpu_dma_interrupt_callback(bsp_mpuxxxx_driver *p_instance)
+{
+    /* Validate instance pointer */
+    if (p_instance == NULL) {
+        return;
+    }
+    
+    /* Clear this instance's DMA busy flag to allow next transfer */
+    p_instance->dma_busy = false;
+    
+    /* Call this instance's registered callback to notify that data is ready
+     * 
+     * The upper layer (OS-aware code) should implement this callback to:
+     * - Notify data processing task (e.g., xTaskNotifyFromISR)
+     * - Send to queue (e.g., xQueueSendFromISR)
+     * - Set event bits (e.g., xEventGroupSetBitsFromISR)
+     * - Or any other OS-specific notification mechanism
+     * 
+     * The callback should be ISR-safe and fast
+     * 
+     * Example:
+     *   void app_mpu_dma_callback(void) {
+     *       BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+     *       xTaskNotifyFromISR(data_task_handle, 0x01, eSetBits,
+     *                         &xHigherPriorityTaskWoken);
+     *       portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+     *   }
+     */
+    if (p_instance->pf_dma_complete_callback != NULL) {
+        p_instance->pf_dma_complete_callback();
+    }
+    
+    /* ISR exits here
+     * Data processing task will be woken by upper layer callback
+     * Task will access p_instance->dma_buffer to retrieve sensor data
+     */
+}
+#endif /* HARDWARE_IIC */
+
+/******************************************************************************
+ * @name    mpu_register_int_callback
+ * @brief   Register callback function for INT interrupt
+ * @param   p_instance[in] Pointer to MPU driver instance
+ * @param   callback[in] Function pointer to callback (ISR-safe)
+ * @return  MPUXXXX_status_t operation status
+ * @note    Upper layer (OS-aware code) should call this to register a callback
+ *          that will be invoked from mpu_int_interrupt_callback().
+ *          
+ *          The callback runs in ISR context and should be fast.
+ *          
+ *          Alternatively, can directly assign to p_instance->pf_int_interrupt_callback.
+ *          
+ *          Example usage (in application code):
+ *          @code
+ *          void my_int_callback(void) {
+ *              // OS-specific operations, e.g., set event flag
+ *          }
+ *          mpu_register_int_callback(&mpu_instance, my_int_callback);
+ *          // Or directly:
+ *          // mpu_instance.pf_int_interrupt_callback = my_int_callback;
+ *          @endcode
+ *****************************************************************************/
+MPUXXXX_status_t mpu_register_int_callback(
+    bsp_mpuxxxx_driver *p_instance,
+    void (*callback)(void))
+{
+    if (p_instance == NULL) {
+#ifdef MPU_DEBUG
+        log_e("mpu_register_int_callback: instance pointer is NULL");
+#endif
+        return MPU_ERRORPARAMETER;
+    }
+    
+    if (callback == NULL) {
+#ifdef MPU_DEBUG
+        log_w("mpu_register_int_callback: callback is NULL");
+#endif
+        return MPU_ERRORPARAMETER;
+    }
+    
+    /* Register callback to this instance */
+    p_instance->pf_int_interrupt_callback = callback;
+    
+#ifdef MPU_DEBUG
+    log_i("mpu_register_int_callback: INT callback registered to instance %p", p_instance);
+#endif
+    
+    return MPU_OK;
+}
+
+#ifdef HARDWARE_IIC
+/******************************************************************************
+ * @name    mpu_register_dma_complete_callback
+ * @brief   Register callback function for DMA complete interrupt (Hardware I2C mode only)
+ * @param   p_instance[in] Pointer to MPU driver instance
+ * @param   callback[in] Function pointer to callback (ISR-safe)
+ * @return  MPUXXXX_status_t operation status
+ * @note    Upper layer (OS-aware code) should call this to register a callback
+ *          that will be invoked from mpu_dma_interrupt_callback().
+ *          
+ *          The callback runs in ISR context and should be fast.
+ *          Typically, this callback will notify an RTOS task.
+ *          
+ *          Alternatively, can directly assign to p_instance->pf_dma_complete_callback.
+ *          
+ *          Example usage (in application code with FreeRTOS):
+ *          @code
+ *          void my_dma_callback(void) {
+ *              BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+ *              xTaskNotifyFromISR(data_task_handle, 0x01, eSetBits, 
+ *                                &xHigherPriorityTaskWoken);
+ *              portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+ *          }
+ *          mpu_register_dma_complete_callback(&mpu_instance, my_dma_callback);
+ *          // Or directly:
+ *          // mpu_instance.pf_dma_complete_callback = my_dma_callback;
+ *          @endcode
+ *          
+ *          Only available when HARDWARE_IIC is defined.
+ *****************************************************************************/
+MPUXXXX_status_t mpu_register_dma_complete_callback(
+    bsp_mpuxxxx_driver *p_instance,
+    void (*callback)(void))
+{
+    if (p_instance == NULL) {
+#ifdef MPU_DEBUG
+        log_e("mpu_register_dma_complete_callback: instance pointer is NULL");
+#endif
+        return MPU_ERRORPARAMETER;
+    }
+    
+    if (callback == NULL) {
+#ifdef MPU_DEBUG
+        log_w("mpu_register_dma_complete_callback: callback is NULL");
+#endif
+        return MPU_ERRORPARAMETER;
+    }
+    
+    /* Register callback to this instance */
+    p_instance->pf_dma_complete_callback = callback;
+    
+#ifdef MPU_DEBUG
+    log_i("mpu_register_dma_complete_callback: DMA callback registered to instance %p", p_instance);
+#endif
+    
+    return MPU_OK;
+}
+#endif /* HARDWARE_IIC */
+
+#ifdef HARDWARE_IIC
+/******************************************************************************
+ * @name    mpu_get_dma_buffer
+ * @brief   Get pointer to DMA buffer for data access (Hardware I2C mode only)
+ * @param   p_instance[in] Pointer to MPU driver instance
+ * @return  Pointer to DMA buffer (14 bytes), or NULL if instance is invalid
+ * @note    This function returns the pointer to the internal DMA buffer where
+ *          sensor data is stored after DMA transfer completes.
+ *          
+ *          The data processing task can use this to access the raw sensor data.
+ *          Each instance has its own independent DMA buffer.
+ *          
+ *          **Buffer Layout** (14 bytes):
+ *          - [0-1]:   ACCEL_X (High byte, Low byte)
+ *          - [2-3]:   ACCEL_Y (High byte, Low byte)
+ *          - [4-5]:   ACCEL_Z (High byte, Low byte)
+ *          - [6-7]:   TEMP    (High byte, Low byte)
+ *          - [8-9]:   GYRO_X  (High byte, Low byte)
+ *          - [10-11]: GYRO_Y  (High byte, Low byte)
+ *          - [12-13]: GYRO_Z  (High byte, Low byte)
+ *          
+ * @warning Buffer content is only valid after DMA complete callback
+ *          and before next DMA transfer starts. Copy data quickly.
+ *          
+ *          Only available when HARDWARE_IIC is defined.
+ *****************************************************************************/
+uint8_t* mpu_get_dma_buffer(bsp_mpuxxxx_driver *p_instance)
+{
+    if (p_instance == NULL) {
+        return NULL;
+    }
+    return p_instance->dma_buffer;
+}
+
+/******************************************************************************
+ * @name    mpu_get_dma_buffer_length
+ * @brief   Get the length of DMA buffer (Hardware I2C mode only)
+ * @param   None
+ * @return  Length of DMA buffer in bytes (always 14)
+ * @note    Returns the size of the DMA buffer for validation purposes.
+ *          This is a constant value and does not depend on instance.
+ *          
+ *          Only available when HARDWARE_IIC is defined.
+ *****************************************************************************/
+uint8_t mpu_get_dma_buffer_length(void)
+{
+    return MPU_DATA_LENGTH;
+}
+
+/******************************************************************************
+ * @name    mpu_is_dma_busy
+ * @brief   Check if DMA transfer is currently in progress for specific instance (Hardware I2C mode only)
+ * @param   p_instance[in] Pointer to MPU driver instance
+ * @return  true if DMA is busy, false if idle or instance is invalid
+ * @note    Can be used to check DMA status for debugging or synchronization.
+ *          Each instance has its own independent DMA busy flag.
+ *          
+ *          Only available when HARDWARE_IIC is defined.
+ *****************************************************************************/
+bool mpu_is_dma_busy(bsp_mpuxxxx_driver *p_instance)
+{
+    if (p_instance == NULL) {
+        return false;
+    }
+    return p_instance->dma_busy;
+}
+#endif /* HARDWARE_IIC */
