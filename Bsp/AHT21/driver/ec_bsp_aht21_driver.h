@@ -112,6 +112,21 @@ typedef struct
     timebase_interface_t       *p_timebase_interface;
 #ifdef OS_SUPPORTING
     yield_interface_t          *p_yield_interface;
+    
+    /* IIC bus lock function pointers for multi-device arbitration
+     * These function pointers allow the driver to acquire/release a bus lock
+     * without depending on specific OS APIs. The actual lock implementation
+     * is provided by the system resource layer.
+     * 
+     * pf_bus_lock: Acquire the IIC bus lock (should block until acquired)
+     *              Returns AHT21_OK on success, AHT21_ERROR on failure
+     * pf_bus_unlock: Release the IIC bus lock
+     * 
+     * If set to NULL, no locking is performed (for single-device systems)
+     */
+    AHT21_status_t (*pf_bus_lock)   (void * const p_context, uint32_t timeout);
+    void           (*pf_bus_unlock) (void * const p_context);
+    void           *p_bus_lock_context;  // Context passed to lock functions
 #endif
 
     uint8_t (*pfinst)(

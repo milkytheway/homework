@@ -110,4 +110,22 @@
 #define MPU_INT_FIFO_OFLOW       (1 << 4)
 #define MPU_INT_I2C_MST          (1 << 5)
 
+// 用户控制寄存器 (0x6A)
+#define MPU_USERCTRL_FIFO_EN     (1 << 6)  // FIFO enable
+#define MPU_USERCTRL_I2C_MST_EN  (1 << 5)  // I2C Master mode enable
+#define MPU_USERCTRL_I2C_IF_DIS  (1 << 4)  // Disable I2C interface
+#define MPU_USERCTRL_FIFO_RESET  (1 << 2)  // Reset FIFO
+#define MPU_USERCTRL_I2C_MST_RST (1 << 1)  // Reset I2C Master
+#define MPU_USERCTRL_SIG_COND_RST (1 << 0) // Reset signal paths
+
+// FIFO使能寄存器 (0x23) 位定义
+#define MPU_FIFO_EN_TEMP         (1 << 7)  // Write TEMP_OUT to FIFO
+#define MPU_FIFO_EN_GYRO_X       (1 << 6)  // Write GYRO_XOUT to FIFO
+#define MPU_FIFO_EN_GYRO_Y       (1 << 5)  // Write GYRO_YOUT to FIFO
+#define MPU_FIFO_EN_GYRO_Z       (1 << 4)  // Write GYRO_ZOUT to FIFO
+#define MPU_FIFO_EN_ACCEL        (1 << 3)  // Write ACCEL_XOUT, ACCEL_YOUT, ACCEL_ZOUT to FIFO
+#define MPU_FIFO_EN_ALL_SENSORS  (MPU_FIFO_EN_TEMP | MPU_FIFO_EN_GYRO_X | \
+                                  MPU_FIFO_EN_GYRO_Y | MPU_FIFO_EN_GYRO_Z | \
+                                  MPU_FIFO_EN_ACCEL)  // Enable all sensors to FIFO
+
 #endif /* __BSP_MPUXXX_DRIVER_REG_H__ */

@@ -232,6 +232,21 @@ static MPUXXXX_status_t mpu_init(void * const p_instance)
         return MPU_ERRORPARAMETER;
     }
     
+#ifdef OS_SUPPORTING
+    /* ========== Acquire IIC bus lock ========== */
+    bsp_mpuxxxx_driver *p_mpu = (bsp_mpuxxxx_driver *)p_instance;
+    if (NULL != p_mpu->pf_bus_lock) {
+        status = p_mpu->pf_bus_lock(p_mpu->p_bus_lock_context, 0xFFFFFFFF);
+        if (MPU_OK != status) {
+#ifdef MPU_DEBUG
+            log_e("mpu_init: failed to acquire bus lock");
+#endif
+            return status;
+        }
+    }
+    /* ========================================== */
+#endif
+    
     /* Step 1: Initialize IIC interface */
 #ifdef MPU_DEBUG
     log_i("mpu_init: [1/11] Initializing IIC interface...");
@@ -247,7 +262,7 @@ static MPUXXXX_status_t mpu_init(void * const p_instance)
 #ifdef MPU_DEBUG
         log_e("mpu_init: device reset failed");
 #endif
-        return status;
+        goto cleanup;
     }
     
     /* Step 3: Wait for reset to complete */
@@ -267,7 +282,7 @@ static MPUXXXX_status_t mpu_init(void * const p_instance)
 #ifdef MPU_DEBUG
         log_e("mpu_init: wake up failed");
 #endif
-        return status;
+        goto cleanup;
     }
     
     if (NULL != p_iic->pf_delay_ms) {
@@ -283,7 +298,7 @@ static MPUXXXX_status_t mpu_init(void * const p_instance)
 #ifdef MPU_DEBUG
         log_e("mpu_init: disable interrupts failed");
 #endif
-        return status;
+        goto cleanup;
     }
     
     /* Step 6: Disable IIC master mode, disable FIFO */
@@ -295,7 +310,7 @@ static MPUXXXX_status_t mpu_init(void * const p_instance)
 #ifdef MPU_DEBUG
         log_e("mpu_init: disable IIC master mode failed");
 #endif
-        return status;
+        goto cleanup;
     }
     
     /* Disable FIFO for all sensors */
@@ -304,7 +319,7 @@ static MPUXXXX_status_t mpu_init(void * const p_instance)
 #ifdef MPU_DEBUG
         log_e("mpu_init: disable FIFO failed");
 #endif
-        return status;
+        goto cleanup;
     }
     
     /* Step 7: Configure INT pin */
@@ -323,7 +338,7 @@ static MPUXXXX_status_t mpu_init(void * const p_instance)
 #ifdef MPU_DEBUG
         log_e("mpu_init: configure INT pin failed");
 #endif
-        return status;
+        goto cleanup;
     }
     
     /* Step 8: Configure default sensor parameters */
@@ -337,7 +352,7 @@ static MPUXXXX_status_t mpu_init(void * const p_instance)
 #ifdef MPU_DEBUG
         log_e("mpu_init: set gyro FSR failed");
 #endif
-        return status;
+        goto cleanup;
     }
     
     /* Set accelerometer FSR to ±2g */
@@ -346,7 +361,7 @@ static MPUXXXX_status_t mpu_init(void * const p_instance)
 #ifdef MPU_DEBUG
         log_e("mpu_init: set accel FSR failed");
 #endif
-        return status;
+        goto cleanup;
     }
     
     /* Set DLPF to 42Hz */
@@ -355,16 +370,16 @@ static MPUXXXX_status_t mpu_init(void * const p_instance)
 #ifdef MPU_DEBUG
         log_e("mpu_init: set DLPF failed");
 #endif
-        return status;
+        goto cleanup;
     }
     
-    /* Set sample rate to 100Hz */
-    status = set_rate(p_instance, 100);
+    /* Set sample rate to 50Hz */
+    status = set_rate(p_instance, 50);
     if (MPU_OK != status) {
 #ifdef MPU_DEBUG
         log_e("mpu_init: set sample rate failed");
 #endif
-        return status;
+        goto cleanup;
     }
     
     /* Step 9: Read and verify device ID */
@@ -376,7 +391,7 @@ static MPUXXXX_status_t mpu_init(void * const p_instance)
 #ifdef MPU_DEBUG
         log_e("mpu_init: read device ID failed");
 #endif
-        return status;
+        goto cleanup;
     }
     
     if (MPU_WHO_AM_I_ID != device_id) {
@@ -385,7 +400,8 @@ static MPUXXXX_status_t mpu_init(void * const p_instance)
         log_e("  Expected: 0x%02X", MPU_WHO_AM_I_ID);
         log_e("  Received: 0x%02X", device_id);
 #endif
-        return MPU_ERRORRESOURCE;
+        status = MPU_ERRORRESOURCE;
+        goto cleanup;
     }
     
 #ifdef MPU_DEBUG
@@ -401,7 +417,7 @@ static MPUXXXX_status_t mpu_init(void * const p_instance)
 #ifdef MPU_DEBUG
         log_e("mpu_init: enable Data Ready interrupt failed");
 #endif
-        return status;
+        goto cleanup;
     }
     
     /* Step 11: Small delay for all settings to take effect */
@@ -429,7 +445,18 @@ static MPUXXXX_status_t mpu_init(void * const p_instance)
     log_i("mpu_init: ========================================");
 #endif
     
-    return MPU_OK;
+    status = MPU_OK;
+
+cleanup:
+#ifdef OS_SUPPORTING
+    /* ========== Release IIC bus lock ========== */
+    if (NULL != p_mpu->pf_bus_unlock) {
+        p_mpu->pf_bus_unlock(p_mpu->p_bus_lock_context);
+    }
+    /* ========================================== */
+#endif
+    
+    return status;
 }
 
 /******************************************************************************
@@ -810,6 +837,21 @@ static MPUXXXX_status_t read_accel(void * const p_instance, mpu6050_data_t *p_da
     }
     
 #ifdef OS_SUPPORTING
+    /* ========== Acquire IIC bus lock ========== */
+    bsp_mpuxxxx_driver *p_mpu = (bsp_mpuxxxx_driver *)p_instance;
+    if (NULL != p_mpu->pf_bus_lock) {
+        status = p_mpu->pf_bus_lock(p_mpu->p_bus_lock_context, 0xFFFFFFFF);
+        if (MPU_OK != status) {
+#ifdef MPU_DEBUG
+            log_e("read_accel: failed to acquire bus lock");
+#endif
+            return status;
+        }
+    }
+    /* ========================================== */
+#endif
+    
+#ifdef OS_SUPPORTING
     if (NULL != p_iic->pf_critical_enter) {
         p_iic->pf_critical_enter();
     }
@@ -838,6 +880,12 @@ static MPUXXXX_status_t read_accel(void * const p_instance, mpu6050_data_t *p_da
 #ifdef MPU_DEBUG
         log_e("read_accel: read multi-byte failed");
 #endif
+#ifdef OS_SUPPORTING
+        /* Release IIC bus lock before returning */
+        if (NULL != p_mpu->pf_bus_unlock) {
+            p_mpu->pf_bus_unlock(p_mpu->p_bus_lock_context);
+        }
+#endif
         return status;
     }
     
@@ -859,6 +907,14 @@ static MPUXXXX_status_t read_accel(void * const p_instance, mpu6050_data_t *p_da
     log_d("read_accel: raw[%d, %d, %d] g[%.3f, %.3f, %.3f]",
           p_data->accel_x_raw, p_data->accel_y_raw, p_data->accel_z_raw,
           p_data->ax, p_data->ay, p_data->az);
+#endif
+    
+#ifdef OS_SUPPORTING
+    /* ========== Release IIC bus lock ========== */
+    if (NULL != p_mpu->pf_bus_unlock) {
+        p_mpu->pf_bus_unlock(p_mpu->p_bus_lock_context);
+    }
+    /* ========================================== */
 #endif
     
     return status;
@@ -914,6 +970,21 @@ static MPUXXXX_status_t read_gyro(void * const p_instance, mpu6050_data_t *p_dat
     }
     
 #ifdef OS_SUPPORTING
+    /* ========== Acquire IIC bus lock ========== */
+    bsp_mpuxxxx_driver *p_mpu = (bsp_mpuxxxx_driver *)p_instance;
+    if (NULL != p_mpu->pf_bus_lock) {
+        status = p_mpu->pf_bus_lock(p_mpu->p_bus_lock_context, 0xFFFFFFFF);
+        if (MPU_OK != status) {
+#ifdef MPU_DEBUG
+            log_e("read_gyro: failed to acquire bus lock");
+#endif
+            return status;
+        }
+    }
+    /* ========================================== */
+#endif
+    
+#ifdef OS_SUPPORTING
     if (NULL != p_iic->pf_critical_enter) {
         p_iic->pf_critical_enter();
     }
@@ -942,6 +1013,12 @@ static MPUXXXX_status_t read_gyro(void * const p_instance, mpu6050_data_t *p_dat
 #ifdef MPU_DEBUG
         log_e("read_gyro: read multi-byte failed");
 #endif
+#ifdef OS_SUPPORTING
+        /* Release IIC bus lock before returning */
+        if (NULL != p_mpu->pf_bus_unlock) {
+            p_mpu->pf_bus_unlock(p_mpu->p_bus_lock_context);
+        }
+#endif
         return status;
     }
     
@@ -963,6 +1040,14 @@ static MPUXXXX_status_t read_gyro(void * const p_instance, mpu6050_data_t *p_dat
     log_d("read_gyro: raw[%d, %d, %d] dps[%.3f, %.3f, %.3f]",
           p_data->gyro_x_raw, p_data->gyro_y_raw, p_data->gyro_z_raw,
           p_data->gx, p_data->gy, p_data->gz);
+#endif
+    
+#ifdef OS_SUPPORTING
+    /* ========== Release IIC bus lock ========== */
+    if (NULL != p_mpu->pf_bus_unlock) {
+        p_mpu->pf_bus_unlock(p_mpu->p_bus_lock_context);
+    }
+    /* ========================================== */
 #endif
     
     return status;
@@ -1022,6 +1107,21 @@ static MPUXXXX_status_t read_temp(void * const p_instance, mpu6050_data_t *p_dat
     }
     
 #ifdef OS_SUPPORTING
+    /* ========== Acquire IIC bus lock ========== */
+    bsp_mpuxxxx_driver *p_mpu = (bsp_mpuxxxx_driver *)p_instance;
+    if (NULL != p_mpu->pf_bus_lock) {
+        status = p_mpu->pf_bus_lock(p_mpu->p_bus_lock_context, 0xFFFFFFFF);
+        if (MPU_OK != status) {
+#ifdef MPU_DEBUG
+            log_e("read_temp: failed to acquire bus lock");
+#endif
+            return status;
+        }
+    }
+    /* ========================================== */
+#endif
+    
+#ifdef OS_SUPPORTING
     if (NULL != p_iic->pf_critical_enter) {
         p_iic->pf_critical_enter();
     }
@@ -1046,6 +1146,12 @@ static MPUXXXX_status_t read_temp(void * const p_instance, mpu6050_data_t *p_dat
 #ifdef MPU_DEBUG
         log_e("read_temp: read multi-byte failed");
 #endif
+#ifdef OS_SUPPORTING
+        /* Release IIC bus lock before returning */
+        if (NULL != p_mpu->pf_bus_unlock) {
+            p_mpu->pf_bus_unlock(p_mpu->p_bus_lock_context);
+        }
+#endif
         return status;
     }
     
@@ -1065,6 +1171,14 @@ static MPUXXXX_status_t read_temp(void * const p_instance, mpu6050_data_t *p_dat
     
 #ifdef MPU_DEBUG
     log_d("read_temp: raw[%d] temp[%.2f°C]", temp_raw, p_data->tempreture);
+#endif
+    
+#ifdef OS_SUPPORTING
+    /* ========== Release IIC bus lock ========== */
+    if (NULL != p_mpu->pf_bus_unlock) {
+        p_mpu->pf_bus_unlock(p_mpu->p_bus_lock_context);
+    }
+    /* ========================================== */
 #endif
     
     return status;
@@ -1130,6 +1244,21 @@ static MPUXXXX_status_t read_all(void * const p_instance, mpu6050_data_t *p_data
     }
     
 #ifdef OS_SUPPORTING
+    /* ========== Acquire IIC bus lock ========== */
+    bsp_mpuxxxx_driver *p_mpu = (bsp_mpuxxxx_driver *)p_instance;
+    if (NULL != p_mpu->pf_bus_lock) {
+        status = p_mpu->pf_bus_lock(p_mpu->p_bus_lock_context, 0xFFFFFFFF);
+        if (MPU_OK != status) {
+#ifdef MPU_DEBUG
+            log_e("read_all: failed to acquire bus lock");
+#endif
+            return status;
+        }
+    }
+    /* ========================================== */
+#endif
+    
+#ifdef OS_SUPPORTING
     if (NULL != p_iic->pf_critical_enter) {
         p_iic->pf_critical_enter();
     }
@@ -1165,6 +1294,12 @@ static MPUXXXX_status_t read_all(void * const p_instance, mpu6050_data_t *p_data
     if (MPU_OK != status) {
 #ifdef MPU_DEBUG
         log_e("read_all: read multi-byte failed");
+#endif
+#ifdef OS_SUPPORTING
+        /* Release IIC bus lock before returning */
+        if (NULL != p_mpu->pf_bus_unlock) {
+            p_mpu->pf_bus_unlock(p_mpu->p_bus_lock_context);
+        }
 #endif
         return status;
     }
@@ -1204,6 +1339,14 @@ static MPUXXXX_status_t read_all(void * const p_instance, mpu6050_data_t *p_data
           p_data->ax, p_data->ay, p_data->az,
           p_data->tempreture,
           p_data->gx, p_data->gy, p_data->gz);
+#endif
+    
+#ifdef OS_SUPPORTING
+    /* ========== Release IIC bus lock ========== */
+    if (NULL != p_mpu->pf_bus_unlock) {
+        p_mpu->pf_bus_unlock(p_mpu->p_bus_lock_context);
+    }
+    /* ========================================== */
 #endif
     
     return status;

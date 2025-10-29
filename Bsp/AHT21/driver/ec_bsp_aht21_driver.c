@@ -177,6 +177,17 @@ static AHT21_status_t aht21_init(bsp_aht21_driver_t * const p_aht21_instance)
     }
 
 #ifdef OS_SUPPORTING
+    /* ========== Acquire IIC bus lock ========== */
+    if (NULL != p_aht21_instance->pf_bus_lock) {
+        ret = p_aht21_instance->pf_bus_lock(p_aht21_instance->p_bus_lock_context, 0xFFFFFFFF);
+        if (AHT21_OK != ret) {
+            return ret;
+        }
+    }
+    /* ========================================== */
+#endif
+
+#ifdef OS_SUPPORTING
     AHT21_IIC_INSTANCE->pf_critical_enter();
 #endif //OS_SUPPORTING
 
@@ -190,6 +201,12 @@ static AHT21_status_t aht21_init(bsp_aht21_driver_t * const p_aht21_instance)
 #ifdef DEBUG
 				log_e("aht21 read_id failed");
 #endif
+#ifdef OS_SUPPORTING
+        /* Release IIC bus lock before returning */
+        if (NULL != p_aht21_instance->pf_bus_unlock) {
+            p_aht21_instance->pf_bus_unlock(p_aht21_instance->p_bus_lock_context);
+        }
+#endif
         return AHT21_ERRORRESOURCE;
     }
 
@@ -198,6 +215,14 @@ static AHT21_status_t aht21_init(bsp_aht21_driver_t * const p_aht21_instance)
 #endif //OS_SUPPORTING
 
     g_inited = AHT21_INITED;
+
+#ifdef OS_SUPPORTING
+    /* ========== Release IIC bus lock ========== */
+    if (NULL != p_aht21_instance->pf_bus_unlock) {
+        p_aht21_instance->pf_bus_unlock(p_aht21_instance->p_bus_lock_context);
+    }
+    /* ========================================== */
+#endif
 
     return AHT21_OK;
 }
@@ -286,6 +311,17 @@ static AHT21_status_t aht21_read_temp_humi(\
     uint32_t  ret_data = 0;
 
 #ifdef OS_SUPPORTING
+    /* ========== Acquire IIC bus lock ========== */
+    if (NULL != p_aht21_instance->pf_bus_lock) {
+        AHT21_status_t ret = p_aht21_instance->pf_bus_lock(p_aht21_instance->p_bus_lock_context, 0xFFFFFFFF);
+        if (AHT21_OK != ret) {
+            return ret;
+        }
+    }
+    /* ========================================== */
+#endif
+
+#ifdef OS_SUPPORTING
     AHT21_IIC_INSTANCE->pf_critical_enter();
 #endif //OS_SUPPORTING
 
@@ -345,6 +381,12 @@ static AHT21_status_t aht21_read_temp_humi(\
         cnt--;
         if(0 == cnt)
         {
+#ifdef OS_SUPPORTING
+            /* Release IIC bus lock before returning */
+            if (NULL != p_aht21_instance->pf_bus_unlock) {
+                p_aht21_instance->pf_bus_unlock(p_aht21_instance->p_bus_lock_context);
+            }
+#endif
             return AHT21_ERRORTIMEOUT;
         }
     }
@@ -402,6 +444,14 @@ static AHT21_status_t aht21_read_temp_humi(\
     ret_data = ret_data& 0xFFFFF;
     *temperature = ((ret_data * 2000) >> 20) - 500;
     *temperature /= 10;
+
+#ifdef OS_SUPPORTING
+    /* ========== Release IIC bus lock ========== */
+    if (NULL != p_aht21_instance->pf_bus_unlock) {
+        p_aht21_instance->pf_bus_unlock(p_aht21_instance->p_bus_lock_context);
+    }
+    /* ========================================== */
+#endif
 
     return AHT21_OK;
 }

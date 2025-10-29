@@ -175,6 +175,12 @@ typedef struct
 #endif
     interuption_interface_t       *interuption_interface;
 
+#ifdef OS_SUPPORTING
+    MPUXXXX_status_t (*pf_bus_lock)   (void * const p_context, uint32_t timeout);
+    void             (*pf_bus_unlock) (void * const p_context);
+    void             *p_bus_lock_context;  // Context passed to lock functions
+#endif
+
     /* basic functions */
     MPUXXXX_status_t (*pf_init)           (void * const);
     MPUXXXX_status_t (*pf_deinit)         (void * const);
