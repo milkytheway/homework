@@ -57,7 +57,7 @@ void app_elog_init(void);
 void dwt_delay_init(void)
 {
     CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;      // 使能 DWT 模块
-    DWT->CYCCNT = 0;                                     // 清零计数�??
+    DWT->CYCCNT = 0;                                     // 清零计数�???
     DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;                 // 使能 cycle counter
 }
 void delay_us(uint32_t us)
