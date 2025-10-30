@@ -44,7 +44,11 @@
 "aht21-test\elog_async.o"
 "aht21-test\elog_buf.o"
 "aht21-test\elog_utils.o"
-"aht21-test\system_adaptation.o"
+"aht21-test\aht21_adapter.o"
+"aht21-test\mpu6050_adapter.o"
+"aht21-test\bsp_mpuxxxx_driver.o"
+"aht21-test\test_mpu6050_driver.o"
+"aht21-test\bsp_mpuxxxx_handler.o"
 --library_type=microlib --strict --scatter "AHT21-Test\AHT21-Test.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

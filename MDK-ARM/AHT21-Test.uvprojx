@@ -340,7 +340,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F411xE</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../Middlewares/IIC;../Bsp/AHT21/driver;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../Middlewares/RTT;../Middlewares/easylogger/inc;..\System;..\Bsp\AHT21\handler</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../Middlewares/IIC;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../Middlewares/RTT;../Middlewares/easylogger/inc;../Bsp/AHT21/driver;../Bsp/AHT21/handler;../Bsp/MPU6050/driver;../Bsp/MPU6050/test;..\Bsp\MPU6050\handler;..\Adaptation</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1336,9 +1336,34 @@
           <GroupName>System</GroupName>
           <Files>
             <File>
-              <FileName>system_adaptation.c</FileName>
+              <FileName>AHT21_adapter.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\System\system_adaptation.c</FilePath>
+              <FilePath>..\Adaptation\AHT21_adapter.c</FilePath>
+            </File>
+            <File>
+              <FileName>MPU6050_adapter.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Adaptation\MPU6050_adapter.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Bsp/MPUxxx</GroupName>
+          <Files>
+            <File>
+              <FileName>bsp_mpuxxxx_driver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Bsp\MPU6050\driver\bsp_mpuxxxx_driver.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_mpu6050_driver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Bsp\MPU6050\test\test_mpu6050_driver.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_mpuxxxx_handler.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Bsp\MPU6050\handler\bsp_mpuxxxx_handler.c</FilePath>
             </File>
           </Files>
         </Group>

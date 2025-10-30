@@ -25,7 +25,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "system_adaptation.h"
+#include "AHT21_adapter.h"
+#include "MPU6050_adapter.h"
 #include "ec_bsp_temp_humi_handler.h"
 #include "elog.h"
 /* USER CODE END Includes */

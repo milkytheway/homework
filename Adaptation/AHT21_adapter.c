@@ -8,7 +8,7 @@
  * @brief HAL APIs for AHT21 sensor and related operations.
  * 
  * @par Dependencies:
- * - system_adaptation.h
+ * - AHT21_adapter.h
  * 
  * @author Jack | R&D Dept. | EternalChip
  * 
@@ -19,7 +19,7 @@
 
 //******************************** Includes *********************************//
 #include "ec_bsp_aht21_driver.h"
-#include "system_adaptation.h"
+#include "AHT21_adapter.h"
 #include "ec_bsp_temp_humi_handler.h"
 #include "iic_hal.h"
 #include "elog.h"

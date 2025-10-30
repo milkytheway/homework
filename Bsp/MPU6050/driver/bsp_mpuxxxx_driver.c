@@ -1821,22 +1821,50 @@ void mpu_int_interrupt_callback(bsp_mpuxxxx_driver *p_instance)
     
     /* No DMA support, notify application layer to actively read data
      * 
-     * Application layer callback should:
-     * - Use xTaskNotifyFromISR() or similar to wake data processing task
-     * - Data processing task then calls pf_read_all() to fetch sensor data
+     * Preferred approach: Use registered callback function
+     * Handler layer should implement the callback with proper OS operations:
+     * - xTaskNotifyFromISR() to wake handler thread
+     * - portYIELD_FROM_ISR() if needed
      * 
-     * Example:
-     *   void app_mpu_int_callback(void) {
-     *       BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-     *       xTaskNotifyFromISR(data_task_handle, 0x01, eSetBits,
-     *                         &xHigherPriorityTaskWoken);
-     *       portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-     *   }
+     * Fallback: Direct notification if callback not registered
+     * (This should be avoided in normal operation)
      */
     if (p_instance->pf_int_interrupt_callback != NULL) {
+        /* Preferred: Use handler layer callback
+         * Handler layer will handle TaskNotify and yield properly
+         */
         p_instance->pf_int_interrupt_callback();
+    } else {
+        /* Fallback: Direct OS notification (not recommended)
+         * This requires OS interface to be properly configured
+         */
+        if (p_instance->p_os_interface != NULL && 
+            p_instance->p_os_interface->os_TaskNotifyGiveFromISR != NULL &&
+            p_instance->p_os_interface->task_handle != NULL) {
+            
+            /* Declare variable to receive yield status
+             * Using generic int type to avoid FreeRTOS type dependency in driver layer
+             */
+            int higher_priority_task_woken = 0;
+            
+            /* Call OS interface function with address of yield status variable
+             * Note: The OS interface implementation should handle portYIELD_FROM_ISR()
+             * based on the value written to higher_priority_task_woken
+             */
+            p_instance->p_os_interface->os_TaskNotifyGiveFromISR(
+                p_instance->p_os_interface->task_handle,
+                &higher_priority_task_woken  // Pass address, not NULL
+            );
+            
+            /* Note: Actual yield operation (portYIELD_FROM_ISR) should be handled
+             * by the OS interface implementation layer or in the ISR that calls
+             * this function, as driver layer should avoid direct OS API calls
+             */
+        }
+        /* If both callback and OS interface are unavailable, this is an error condition
+         * In Software I2C mode, proper notification mechanism must be configured
+         */
     }
-    
 #endif /* HARDWARE_IIC */
 }
 

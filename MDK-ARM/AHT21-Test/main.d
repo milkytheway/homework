@@ -54,4 +54,3 @@ aht21-test\main.o: ../Core/Inc/usart.h
 aht21-test\main.o: ../Core/Inc/gpio.h
 aht21-test\main.o: ../Drivers/CMSIS/Include/core_cm4.h
 aht21-test\main.o: ../Middlewares/IIC/iic_hal.h
-aht21-test\main.o: ../Bsp/AHT21/driver/ec_bsp_aht21_driver.h

@@ -27,7 +27,7 @@
 //******************************** Includes *********************************//
 
 //********************** private macro definitions **************************//
-//#define OS_SUPPORTING
+#define OS_SUPPORTING
 
 /**
  * Hardware I2C + DMA Mode Configuration
@@ -116,6 +116,7 @@ typedef struct
 #ifdef OS_SUPPORTING
 typedef struct 
 {
+    void *task_handle;
     MPUXXXX_status_t (*pf_os_semaphore_create_mutex) (void **);
     MPUXXXX_status_t (*pf_os_semaphore_create_binary) (void **);
     MPUXXXX_status_t (*pf_os_semaphore_give) (void *);
@@ -135,6 +136,9 @@ typedef struct
                             void * const p_queue_handle,
                             void * const msg,
                             uint32_t timeout);
+    
+    MPUXXXX_status_t (*os_TaskNotifyGiveFromISR)(void *task_handle, void *higher_priority_task_woken);
+    MPUXXXX_status_t (*os_TaskNotifyTake)(void *task_handle, void *higher_priority_task_woken);
 } os_interface_t;
 
 #endif

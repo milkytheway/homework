@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/Administrator/Desktop/Project_base/04_Software/02_homework/AHT21/AHT21-Test",
-      "program": "c:/Users/Administrator/Desktop/Project_base/04_Software/02_homework/AHT21/AHT21-Test/build/Debug/outDebug",
+      "cwd": "c:/Users/Administrator/Desktop/Project_base/04_Software/02_homework/AHT21/AHT21-Test/Adaptation",
+      "program": "c:/Users/Administrator/Desktop/Project_base/04_Software/02_homework/AHT21/AHT21-Test/Adaptation/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
