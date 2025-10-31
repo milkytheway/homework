@@ -4,7 +4,7 @@ aht21-test\bsp_mpuxxxx_handler.o: ../Bsp/MPU6050/driver/bsp_mpuxxxx_driver.h
 aht21-test\bsp_mpuxxxx_handler.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdio.h
 aht21-test\bsp_mpuxxxx_handler.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdint.h
 aht21-test\bsp_mpuxxxx_handler.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdbool.h
-aht21-test\bsp_mpuxxxx_handler.o: ..\Bsp\driver_resource\driver_resource.h
+aht21-test\bsp_mpuxxxx_handler.o: ../Bsp/driver_resource/driver_resource.h
 aht21-test\bsp_mpuxxxx_handler.o: ../Middlewares/easylogger/inc/elog.h
 aht21-test\bsp_mpuxxxx_handler.o: ../Middlewares/easylogger/inc/elog_cfg.h
 aht21-test\bsp_mpuxxxx_handler.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stddef.h

@@ -50,10 +50,10 @@ aht21-test\freertos.o: ../Middlewares/easylogger/inc/elog_cfg.h
 aht21-test\freertos.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdbool.h
 aht21-test\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h
 aht21-test\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h
-aht21-test\freertos.o: ..\Adaptation\AHT21_adapter.h
+aht21-test\freertos.o: ../Adaptation/AHT21_adapter.h
 aht21-test\freertos.o: ../Bsp/AHT21/driver/ec_bsp_aht21_driver.h
-aht21-test\freertos.o: ..\Bsp\driver_resource\driver_resource.h
+aht21-test\freertos.o: ../Bsp/driver_resource/driver_resource.h
 aht21-test\freertos.o: ../Bsp/AHT21/handler/ec_bsp_temp_humi_handler.h
-aht21-test\freertos.o: ..\Adaptation\MPU6050_adapter.h
-aht21-test\freertos.o: ..\Bsp\MPU6050\handler\bsp_mpuxxxx_handler.h
+aht21-test\freertos.o: ../Adaptation/MPU6050_adapter.h
+aht21-test\freertos.o: ../Bsp/MPU6050/handler/bsp_mpuxxxx_handler.h
 aht21-test\freertos.o: ../Bsp/MPU6050/driver/bsp_mpuxxxx_driver.h

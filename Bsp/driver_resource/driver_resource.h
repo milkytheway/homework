@@ -141,7 +141,7 @@ typedef struct
     int (*pf_os_semaphore_create_binary) (void **);
     int (*pf_os_semaphore_take) (void *semaphore_handle, uint32_t ticksToWait);
     int (*pf_os_semaphore_give) (void *);
-} os_interface_t;
+} os_interface_tt;
 
 #endif
 

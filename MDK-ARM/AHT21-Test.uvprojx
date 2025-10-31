@@ -340,7 +340,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F411xE</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../Middlewares/IIC;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../Middlewares/RTT;../Middlewares/easylogger/inc;../Bsp/AHT21/driver;../Bsp/AHT21/handler;../Bsp/MPU6050/driver;../Bsp/MPU6050/test;..\Bsp\MPU6050\handler;..\Bsp\driver_resource;..\Adaptation</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../Middlewares/IIC;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../Middlewares/RTT;../Middlewares/easylogger/inc;../Bsp/AHT21/driver;../Bsp/AHT21/handler;../Bsp/MPU6050/driver;../Bsp/MPU6050/test;../Bsp/MPU6050/handler;../Bsp/driver_resource;../Adaptation</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>

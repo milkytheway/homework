@@ -119,6 +119,10 @@
       <TargetDriverDllRegistry>
         <SetRegEntry>
           <Number>0</Number>
+          <Key>DLGUARM</Key>
+        </SetRegEntry>
+        <SetRegEntry>
+          <Number>0</Number>
           <Key>ARMRTXEVENTFLAGS</Key>
           <Name>-L70 -Z18 -C0 -M0 -T1</Name>
         </SetRegEntry>
@@ -131,10 +135,6 @@
           <Number>0</Number>
           <Key>ARMDBGFLAGS</Key>
           <Name></Name>
-        </SetRegEntry>
-        <SetRegEntry>
-          <Number>0</Number>
-          <Key>DLGUARM</Key>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -156,9 +156,25 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>377</LineNumber>
+          <LineNumber>164</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134231238</Address>
+          <Address>134250052</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>..\Bsp\MPU6050\driver\bsp_mpuxxxx_driver.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\AHT21_Test\../Bsp/MPU6050/driver/bsp_mpuxxxx_driver.c\164</Expression>
+        </Bp>
+        <Bp>
+          <Number>1</Number>
+          <Type>0</Type>
+          <LineNumber>94</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>134235018</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -167,14 +183,14 @@
           <BreakIfRCount>1</BreakIfRCount>
           <Filename>..\Bsp\AHT21\handler\ec_bsp_temp_humi_handler.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\AHT21_Test\../Bsp/AHT21/handler/ec_bsp_temp_humi_handler.c\377</Expression>
+          <Expression>\\AHT21_Test\../Bsp/AHT21/handler/ec_bsp_temp_humi_handler.c\94</Expression>
         </Bp>
         <Bp>
-          <Number>1</Number>
+          <Number>2</Number>
           <Type>0</Type>
           <LineNumber>271</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134235164</Address>
+          <Address>134238692</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -186,11 +202,43 @@
           <Expression>\\AHT21_Test\../Bsp/AHT21/handler/ec_bsp_temp_humi_handler.c\271</Expression>
         </Bp>
         <Bp>
-          <Number>2</Number>
+          <Number>3</Number>
           <Type>0</Type>
-          <LineNumber>305</LineNumber>
+          <LineNumber>579</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134238662</Address>
+          <Address>134231604</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>..\Bsp\AHT21\driver\ec_bsp_aht21_driver.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\AHT21_Test\../Bsp/AHT21/driver/ec_bsp_aht21_driver.c\579</Expression>
+        </Bp>
+        <Bp>
+          <Number>4</Number>
+          <Type>0</Type>
+          <LineNumber>182</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>134231306</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>..\Bsp\AHT21\driver\ec_bsp_aht21_driver.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\AHT21_Test\../Bsp/AHT21/driver/ec_bsp_aht21_driver.c\182</Expression>
+        </Bp>
+        <Bp>
+          <Number>5</Number>
+          <Type>0</Type>
+          <LineNumber>191</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>134234384</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -199,42 +247,42 @@
           <BreakIfRCount>1</BreakIfRCount>
           <Filename>..\Bsp\AHT21\handler\ec_bsp_temp_humi_handler.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\AHT21_Test\../Bsp/AHT21/handler/ec_bsp_temp_humi_handler.c\305</Expression>
+          <Expression>\\AHT21_Test\../Bsp/AHT21/handler/ec_bsp_temp_humi_handler.c\191</Expression>
         </Bp>
         <Bp>
-          <Number>3</Number>
+          <Number>6</Number>
           <Type>0</Type>
-          <LineNumber>100</LineNumber>
+          <LineNumber>327</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>0</Address>
+          <Address>134253048</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>0</BreakIfRCount>
-          <Filename>..\Bsp\AHT21\driver\ec_bsp_aht21_driver.c</Filename>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>..\Bsp\AHT21\handler\ec_bsp_temp_humi_handler.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression></Expression>
+          <Expression>\\AHT21_Test\../Bsp/AHT21/handler/ec_bsp_temp_humi_handler.c\327</Expression>
         </Bp>
         <Bp>
-          <Number>4</Number>
+          <Number>7</Number>
           <Type>0</Type>
-          <LineNumber>106</LineNumber>
+          <LineNumber>441</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>0</Address>
+          <Address>134220080</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>0</BreakIfRCount>
-          <Filename>..\Bsp\AHT21\driver\ec_bsp_aht21_driver.c</Filename>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>..\Adaptation\MPU6050_adapter.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression></Expression>
+          <Expression>\\AHT21_Test\../Adaptation/MPU6050_adapter.c\441</Expression>
         </Bp>
         <Bp>
-          <Number>5</Number>
+          <Number>8</Number>
           <Type>0</Type>
           <LineNumber>380</LineNumber>
           <EnabledFlag>1</EnabledFlag>
@@ -249,23 +297,22 @@
           <ExecCommand></ExecCommand>
           <Expression></Expression>
         </Bp>
-        <Bp>
-          <Number>6</Number>
-          <Type>0</Type>
-          <LineNumber>134</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>0</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>0</BreakIfRCount>
-          <Filename>../Core/Src/freertos.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression></Expression>
-        </Bp>
       </Breakpoint>
+      <WatchWindow1>
+        <Ww>
+          <count>0</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>handler_instance</ItemText>
+        </Ww>
+      </WatchWindow1>
+      <MemoryWindow1>
+        <Mm>
+          <WinNumber>1</WinNumber>
+          <SubType>1</SubType>
+          <ItemText>0x200000D4</ItemText>
+          <AccSizeX>0</AccSizeX>
+        </Mm>
+      </MemoryWindow1>
       <Tracepoint>
         <THDelay>0</THDelay>
       </Tracepoint>
@@ -708,7 +755,7 @@
 
   <Group>
     <GroupName>Bsp/MPUxxx</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>

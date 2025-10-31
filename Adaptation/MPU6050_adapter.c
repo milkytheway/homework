@@ -344,7 +344,7 @@ static mpu_handler_os_interface_t mpu_os_interface =
 //***************************** OS Interface ******************************//
 
 //***************************** Input Arguments ***************************//
-static mpu_handler_all_input_arg_t mpu_input_args = 
+mpu_handler_all_input_arg_t mpu_input_args = 
 {
     .iic_driver_interface = &mpu_iic_driver_interface,
     .timebase_interface = &mpu_timebase_interface,

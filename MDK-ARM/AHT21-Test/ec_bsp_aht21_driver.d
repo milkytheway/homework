@@ -2,7 +2,7 @@ aht21-test\ec_bsp_aht21_driver.o: ..\Bsp\AHT21\driver\ec_bsp_aht21_driver.c
 aht21-test\ec_bsp_aht21_driver.o: ..\Bsp\AHT21\driver\ec_bsp_aht21_driver.h
 aht21-test\ec_bsp_aht21_driver.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdio.h
 aht21-test\ec_bsp_aht21_driver.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdint.h
-aht21-test\ec_bsp_aht21_driver.o: ..\Bsp\driver_resource\driver_resource.h
+aht21-test\ec_bsp_aht21_driver.o: ../Bsp/driver_resource/driver_resource.h
 aht21-test\ec_bsp_aht21_driver.o: ..\Bsp\AHT21\driver\ec_bsp_aht21_reg.h
 aht21-test\ec_bsp_aht21_driver.o: ../Middlewares/easylogger/inc/elog.h
 aht21-test\ec_bsp_aht21_driver.o: ../Middlewares/easylogger/inc/elog_cfg.h

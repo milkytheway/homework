@@ -558,6 +558,12 @@ AHT21_status_t aht21_inst(
 #endif
     p_aht21_instance->p_bus_instance = p_bus_instance;
 
+#ifdef OS_SUPPORTING
+    p_aht21_instance->pf_bus_lock = NULL;
+    p_aht21_instance->pf_bus_unlock = NULL;
+    p_aht21_instance->p_bus_lock_context = NULL;
+#endif
+
     p_aht21_instance->pf_init = (AHT21_status_t (*)(void * const))aht21_init;
     p_aht21_instance->pf_deinit = (AHT21_status_t (*)(void * const))aht21_deinit;
     p_aht21_instance->pf_read_id = (AHT21_status_t (*)(void * const))aht21_read_id;

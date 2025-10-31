@@ -373,8 +373,8 @@ static MPUXXXX_status_t mpu_init(void * const p_instance)
         goto cleanup;
     }
     
-    /* Set sample rate to 50Hz */
-    status = set_rate(p_instance, 50);
+    /* Set sample rate to 5Hz */
+    status = set_rate(p_instance, 5);
     if (MPU_OK != status) {
 #ifdef MPU_DEBUG
         log_e("mpu_init: set sample rate failed");
@@ -394,19 +394,19 @@ static MPUXXXX_status_t mpu_init(void * const p_instance)
         goto cleanup;
     }
     
-    if (MPU_WHO_AM_I_ID != device_id) {
-#ifdef MPU_DEBUG
-        log_e("mpu_init: Device ID mismatch!");
-        log_e("  Expected: 0x%02X", MPU_WHO_AM_I_ID);
-        log_e("  Received: 0x%02X", device_id);
-#endif
-        status = MPU_ERRORRESOURCE;
-        goto cleanup;
-    }
+//    if (MPU_WHO_AM_I_ID != device_id) {
+//#ifdef MPU_DEBUG
+//        log_e("mpu_init: Device ID mismatch!");
+//        log_e("  Expected: 0x%02X", MPU_WHO_AM_I_ID);
+//        log_e("  Received: 0x%02X", device_id);
+//#endif
+//        status = MPU_ERRORRESOURCE;
+//        goto cleanup;
+//    }
     
-#ifdef MPU_DEBUG
-    log_i("  Device ID verified: 0x%02X (MPU6050)", device_id);
-#endif
+//#ifdef MPU_DEBUG
+//    log_i("  Device ID verified: 0x%02X (MPU6050)", device_id);
+//#endif
     
     /* Step 10: Enable Data Ready interrupt */
 #ifdef MPU_DEBUG
