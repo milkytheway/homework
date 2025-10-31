@@ -2,6 +2,7 @@ aht21-test\aht21_adapter.o: ..\Adaptation\AHT21_adapter.c
 aht21-test\aht21_adapter.o: ../Bsp/AHT21/driver/ec_bsp_aht21_driver.h
 aht21-test\aht21_adapter.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdio.h
 aht21-test\aht21_adapter.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdint.h
+aht21-test\aht21_adapter.o: ..\Bsp\driver_resource\driver_resource.h
 aht21-test\aht21_adapter.o: ..\Adaptation\AHT21_adapter.h
 aht21-test\aht21_adapter.o: ../Bsp/AHT21/handler/ec_bsp_temp_humi_handler.h
 aht21-test\aht21_adapter.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdbool.h

@@ -81,67 +81,67 @@ extern "C" {
  * @brief Initialize I2C bus for AHT21 communication
  * 
  * @param p_bus Pointer to I2C bus configuration structure
- * @return AHT21_OK on success, AHT21_ERROR on failure
+ * @return int (casted from AHT21_OK on success, AHT21_ERROR on failure)
  */
-AHT21_status_t IICInit_wrapper(void *p_bus);
+int IICInit_wrapper(void *p_bus);
 
 /**
  * @brief Generate I2C start condition
  * 
  * @param p_bus Pointer to I2C bus configuration structure
- * @return AHT21_OK on success, AHT21_ERROR on failure
+ * @return int (casted from AHT21_OK on success, AHT21_ERROR on failure)
  */
-AHT21_status_t IICStart_wrapper(void *p_bus);
+int IICStart_wrapper(void *p_bus);
 
 /**
  * @brief Generate I2C stop condition
  * 
  * @param p_bus Pointer to I2C bus configuration structure
- * @return AHT21_OK on success, AHT21_ERROR on failure
+ * @return int (casted from AHT21_OK on success, AHT21_ERROR on failure)
  */
-AHT21_status_t IICStop_wrapper(void *p_bus);
+int IICStop_wrapper(void *p_bus);
 
 /**
  * @brief Send single byte over I2C
  * 
  * @param p_bus Pointer to I2C bus configuration structure
  * @param data Byte to transmit
- * @return AHT21_OK on success, AHT21_ERROR on failure
+ * @return int (casted from AHT21_OK on success, AHT21_ERROR on failure)
  */
-AHT21_status_t IICSendByte_wrapper(void *p_bus, uint8_t data);
+int IICSendByte_wrapper(void *p_bus, uint8_t data);
 
 /**
  * @brief Receive single byte over I2C
  * 
  * @param p_bus Pointer to I2C bus configuration structure
  * @param p_data Pointer to store received byte
- * @return AHT21_OK on success, AHT21_ERROR on failure
+ * @return int (casted from AHT21_OK on success, AHT21_ERROR on failure)
  */
-AHT21_status_t IICReceiveByte_wrapper(void *p_bus, uint8_t *p_data);
+int IICReceiveByte_wrapper(void *p_bus, uint8_t *p_data);
 
 /**
  * @brief Wait for I2C acknowledge from slave
  * 
  * @param p_bus Pointer to I2C bus configuration structure
- * @return AHT21_OK if ACK received, AHT21_ERROR if NACK received
+ * @return int (casted from AHT21_OK if ACK received, AHT21_ERROR if NACK received)
  */
-AHT21_status_t IICWaitAck_wrapper(void *p_bus);
+int IICWaitAck_wrapper(void *p_bus);
 
 /**
  * @brief Send I2C acknowledge to slave
  * 
  * @param p_bus Pointer to I2C bus configuration structure
- * @return AHT21_OK on success
+ * @return int (casted from AHT21_OK on success)
  */
-AHT21_status_t IICSendAck_wrapper(void *p_bus);
+int IICSendAck_wrapper(void *p_bus);
 
 /**
  * @brief Send I2C not-acknowledge to slave
  * 
  * @param p_bus Pointer to I2C bus configuration structure
- * @return AHT21_OK on success
+ * @return int (casted from AHT21_OK on success)
  */
-AHT21_status_t IICSendNotAck_wrapper(void *p_bus);
+int IICSendNotAck_wrapper(void *p_bus);
 
 /* FreeRTOS Queue Operations for Temperature/Humidity Handler */
 

@@ -4,6 +4,7 @@ aht21-test\mpu6050_adapter.o: ../Bsp/MPU6050/driver/bsp_mpuxxxx_driver.h
 aht21-test\mpu6050_adapter.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdio.h
 aht21-test\mpu6050_adapter.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdint.h
 aht21-test\mpu6050_adapter.o: C:\Keil_v5\ARM\ARM-COMPILER-506\Bin\..\include\stdbool.h
+aht21-test\mpu6050_adapter.o: ..\Bsp\driver_resource\driver_resource.h
 aht21-test\mpu6050_adapter.o: ..\Adaptation\MPU6050_adapter.h
 aht21-test\mpu6050_adapter.o: ../Middlewares/IIC/iic_hal.h
 aht21-test\mpu6050_adapter.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h

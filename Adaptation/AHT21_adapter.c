@@ -50,64 +50,64 @@ iic_bus_t AHT_bus =
 //********************************** Driver *********************************//
 
 /* wrapper functions for iic_driver_interface_t */
-AHT21_status_t IICInit_wrapper(void *p_bus)
+int IICInit_wrapper(void *p_bus)
 {
     iic_bus_t *bus = (iic_bus_t *)p_bus;
     IICInit(bus);
-    return AHT21_OK;
+    return (int)AHT21_OK;
 }
 
-AHT21_status_t IICStart_wrapper(void *p_bus)
+int IICStart_wrapper(void *p_bus)
 {
     iic_bus_t *bus = (iic_bus_t *)p_bus;
     IICStart(bus);
-    return AHT21_OK;
+    return (int)AHT21_OK;
 }
 
-AHT21_status_t IICStop_wrapper(void *p_bus)
+int IICStop_wrapper(void *p_bus)
 {
     iic_bus_t *bus = (iic_bus_t *)p_bus;
     IICStop(bus);
-    return AHT21_OK;
+    return (int)AHT21_OK;
 }
 
-AHT21_status_t IICSendByte_wrapper(void *p_bus, uint8_t data)
+int IICSendByte_wrapper(void *p_bus, uint8_t data)
 {
     iic_bus_t *bus = (iic_bus_t *)p_bus;
     IICSendByte(bus, data);
-    return AHT21_OK;
+    return (int)AHT21_OK;
 }
 
-AHT21_status_t IICReceiveByte_wrapper(void *p_bus, uint8_t *p_data)
+int IICReceiveByte_wrapper(void *p_bus, uint8_t *p_data)
 {
     iic_bus_t *bus = (iic_bus_t *)p_bus;
     unsigned char received = IICReceiveByte(bus);
     *p_data = received;
 	//log_e("IIC receive = %d",received);
-    return AHT21_OK;
+    return (int)AHT21_OK;
 }
 
-AHT21_status_t IICWaitAck_wrapper(void *p_bus)
+int IICWaitAck_wrapper(void *p_bus)
 {
 	//0:success 
     iic_bus_t *bus = (iic_bus_t *)p_bus;
     unsigned char result = IICWaitAck(bus);
 	//log_e("ACK val = %x",result);
-    return (result == 0) ? AHT21_OK : AHT21_ERROR;
+    return (result == 0) ? (int)AHT21_OK : (int)AHT21_ERROR;
 }
 
-AHT21_status_t IICSendAck_wrapper(void *p_bus)
+int IICSendAck_wrapper(void *p_bus)
 {
     iic_bus_t *bus = (iic_bus_t *)p_bus;
     IICSendAck(bus);
-    return AHT21_OK;
+    return (int)AHT21_OK;
 }
 
-AHT21_status_t IICSendNotAck_wrapper(void *p_bus)
+int IICSendNotAck_wrapper(void *p_bus)
 {
     iic_bus_t *bus = (iic_bus_t *)p_bus;
     IICSendNotAck(bus);
-    return AHT21_OK;
+    return (int)AHT21_OK;
 }
 
 iic_driver_interface_t iic_driver_interface = 

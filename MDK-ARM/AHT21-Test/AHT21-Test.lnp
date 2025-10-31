@@ -27,6 +27,9 @@
 "aht21-test\system_stm32f4xx.o"
 "aht21-test\ec_bsp_aht21_driver.o"
 "aht21-test\ec_bsp_temp_humi_handler.o"
+"aht21-test\bsp_mpuxxxx_driver.o"
+"aht21-test\test_mpu6050_driver.o"
+"aht21-test\bsp_mpuxxxx_handler.o"
 "aht21-test\croutine.o"
 "aht21-test\event_groups.o"
 "aht21-test\list.o"
@@ -46,9 +49,6 @@
 "aht21-test\elog_utils.o"
 "aht21-test\aht21_adapter.o"
 "aht21-test\mpu6050_adapter.o"
-"aht21-test\bsp_mpuxxxx_driver.o"
-"aht21-test\test_mpu6050_driver.o"
-"aht21-test\bsp_mpuxxxx_handler.o"
 --library_type=microlib --strict --scatter "AHT21-Test\AHT21-Test.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

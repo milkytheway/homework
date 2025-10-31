@@ -312,6 +312,7 @@ void temp_humi_handler_thread(void *argument)
     bsp_aht21_driver_t bsp_aht21_driver;
     //handler instance
     bsp_temp_humi_xxx_handler_t handler_instance = {0};
+    temp_humi_handler_private_data_t private_data = {0};
 
     if(NULL == argument)
     {
@@ -323,6 +324,7 @@ void temp_humi_handler_thread(void *argument)
 
     input_arg = (temp_humi_handler_all_input_arg_t *)argument;
     handler_instance.p_aht21_instance = &bsp_aht21_driver;
+    handler_instance.p_private_data = &private_data;
 
     ret = bsp_temp_humi_xxx_handler_inst(
             &handler_instance,
@@ -332,6 +334,9 @@ void temp_humi_handler_thread(void *argument)
     if(HANDLER_OK == ret)
     {
         __mount_handler(&handler_instance);
+#ifdef HANDLER_DEBUG
+        log_d("mount gp_temp_humi_instance");
+#endif
     }
 
     for(;;)

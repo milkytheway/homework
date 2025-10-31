@@ -61,35 +61,35 @@ static bsp_mpuxxxx_handler_t g_mpu_handler_instance;
 
 //********************************** IIC Interface **************************//
 /* IIC interface wrapper functions for MPU6050 driver */
-static MPUXXXX_status_t MPU_IICInit_wrapper(void *p_bus)
+static int MPU_IICInit_wrapper(void *p_bus)
 {
     iic_bus_t *bus = (iic_bus_t *)p_bus;
     IICInit(bus);
-    return MPU_OK;
+    return (int)MPU_OK;
 }
 
-static MPUXXXX_status_t MPU_IICStart_wrapper(void *p_bus)
+static int MPU_IICStart_wrapper(void *p_bus)
 {
     iic_bus_t *bus = (iic_bus_t *)p_bus;
     IICStart(bus);
-    return MPU_OK;
+    return (int)MPU_OK;
 }
 
-static MPUXXXX_status_t MPU_IICStop_wrapper(void *p_bus)
+static int MPU_IICStop_wrapper(void *p_bus)
 {
     iic_bus_t *bus = (iic_bus_t *)p_bus;
     IICStop(bus);
-    return MPU_OK;
+    return (int)MPU_OK;
 }
 
-static MPUXXXX_status_t MPU_IICSendByte_wrapper(void *p_bus, uint8_t data)
+static int MPU_IICSendByte_wrapper(void *p_bus, uint8_t data)
 {
     iic_bus_t *bus = (iic_bus_t *)p_bus;
     IICSendByte(bus, data);
-    return MPU_OK;
+    return (int)MPU_OK;
 }
 
-static MPUXXXX_status_t MPU_IICReceiveByte_wrapper(void *p_bus, uint8_t *p_data)
+static int MPU_IICReceiveByte_wrapper(void *p_bus, uint8_t *p_data)
 {
     iic_bus_t *bus = (iic_bus_t *)p_bus;
     unsigned char received = IICReceiveByte(bus);
@@ -97,49 +97,49 @@ static MPUXXXX_status_t MPU_IICReceiveByte_wrapper(void *p_bus, uint8_t *p_data)
     {
         *p_data = received;
     }
-    return MPU_OK;
+    return (int)MPU_OK;
 }
 
-static MPUXXXX_status_t MPU_IICWaitAck_wrapper(void *p_bus)
+static int MPU_IICWaitAck_wrapper(void *p_bus)
 {
     iic_bus_t *bus = (iic_bus_t *)p_bus;
     unsigned char result = IICWaitAck(bus);
-    return (result == 0) ? MPU_OK : MPU_ERROR;
+    return (result == 0) ? (int)MPU_OK : (int)MPU_ERROR;
 }
 
-static MPUXXXX_status_t MPU_IICSendAck_wrapper(void *p_bus)
+static int MPU_IICSendAck_wrapper(void *p_bus)
 {
     iic_bus_t *bus = (iic_bus_t *)p_bus;
     IICSendAck(bus);
-    return MPU_OK;
+    return (int)MPU_OK;
 }
 
-static MPUXXXX_status_t MPU_IICSendNotAck_wrapper(void *p_bus)
+static int MPU_IICSendNotAck_wrapper(void *p_bus)
 {
     iic_bus_t *bus = (iic_bus_t *)p_bus;
     IICSendNotAck(bus);
-    return MPU_OK;
+    return (int)MPU_OK;
 }
 
-static MPUXXXX_status_t MPU_IICWriteReg_wrapper(void *p_bus, uint8_t daddr, uint8_t reg, uint8_t data)
+static int MPU_IICWriteReg_wrapper(void *p_bus, uint8_t daddr, uint8_t reg, uint8_t data)
 {
     iic_bus_t *bus = (iic_bus_t *)p_bus;
     IIC_Write_One_Byte(bus, daddr, reg, data);
-    return MPU_OK;
+    return (int)MPU_OK;
 }
 
-static MPUXXXX_status_t MPU_IICReadReg_wrapper(void *p_bus, uint8_t daddr, uint8_t reg)
+static int MPU_IICReadReg_wrapper(void *p_bus, uint8_t daddr, uint8_t reg)
 {
     iic_bus_t *bus = (iic_bus_t *)p_bus;
     IIC_Read_One_Byte(bus, daddr, reg);
-    return MPU_OK;
+    return (int)MPU_OK;
 }
 
-static MPUXXXX_status_t MPU_IICReadMultiByte_wrapper(void *p_bus, uint8_t daddr, uint8_t reg, uint8_t length, uint8_t *p_data)
+static int MPU_IICReadMultiByte_wrapper(void *p_bus, uint8_t daddr, uint8_t reg, uint8_t length, uint8_t *p_data)
 {
     iic_bus_t *bus = (iic_bus_t *)p_bus;
     IIC_Read_Multi_Byte(bus, daddr, reg, length, p_data);
-    return MPU_OK;
+    return (int)MPU_OK;
 }
 
 /* IIC driver interface structure */

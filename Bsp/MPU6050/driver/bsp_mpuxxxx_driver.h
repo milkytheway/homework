@@ -24,10 +24,10 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include "driver_resource.h"
 //******************************** Includes *********************************//
 
 //********************** private macro definitions **************************//
-#define OS_SUPPORTING
 
 /**
  * Hardware I2C + DMA Mode Configuration
@@ -64,38 +64,10 @@ typedef enum
 
 
 //********************************** APIs ***********************************//
-typedef struct
-{
-    MPUXXXX_status_t (*pf_iic_init)                     (void *);
-    MPUXXXX_status_t (*pf_iic_deinit)                   (void *);
-    MPUXXXX_status_t (*pf_iic_start)                    (void *);
-    MPUXXXX_status_t (*pf_iic_stop)                     (void *);
-    MPUXXXX_status_t (*pf_iic_send_byte)                (void *, uint8_t);
-    MPUXXXX_status_t (*pf_iic_receive_byte)             (void *, uint8_t *);
-    MPUXXXX_status_t (*pf_iic_wait_ack)       (void *);
-    MPUXXXX_status_t (*pf_iic_send_ack)       (void *);
-    MPUXXXX_status_t (*pf_iic_send_nack)      (void *);
-    MPUXXXX_status_t (*pf_iic_write_reg)      (void *, uint8_t daddr,uint8_t reg,uint8_t data);
-    MPUXXXX_status_t (*pf_iic_read_reg)       (void *, uint8_t daddr,uint8_t reg);
-    MPUXXXX_status_t (*pf_iic_read_multi_byte)(void *, uint8_t daddr,uint8_t reg,uint8_t length,uint8_t buff[]);
-
-#ifdef HARDWARE_IIC
-    /* DMA read function for hardware I2C mode only */
-    MPUXXXX_status_t (*pf_iic_read_dma)(void *, uint8_t daddr, uint8_t reg, uint8_t length, uint8_t *buff);
-#endif
-
-    void (*pf_delay_ms)           (uint32_t);
-
-#ifdef OS_SUPPORTING
-    void (*pf_critical_enter)               (void);
-    void (*pf_critical_exit)                (void);
-#endif /* OS_SUPPORTING */
-} iic_driver_interface_t;
-
-typedef struct
-{
-    uint32_t (*pf_get_tick_count) (void);
-} timebase_interface_t;
+/* Common interface definitions (iic_driver_interface_t, timebase_interface_t) 
+ * are now provided by driver_resource.h to avoid redefinition errors when 
+ * multiple sensor drivers are used together.
+ */
 
 typedef struct 
 {
