@@ -3,7 +3,7 @@
 <title>Static Call Graph - [AHT21-Test\AHT21-Test.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image AHT21-Test\AHT21-Test.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Fri Oct 31 10:24:58 2025
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Sat Nov 01 01:12:26 2025
 <BR><P>
 <H3>Maximum Stack Usage =        528 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -123,18 +123,17 @@ Function Pointers
  <LI><a href="#[2c]">UsageFault_Handler</a> from stm32f4xx_it.o(i.UsageFault_Handler) referenced from startup_stm32f411xe.o(RESET)
  <LI><a href="#[31]">WWDG_IRQHandler</a> from startup_stm32f411xe.o(.text) referenced from startup_stm32f411xe.o(RESET)
  <LI><a href="#[6c]">__main</a> from entry.o(.ARM.Collect$$$$00000000) referenced from startup_stm32f411xe.o(.text)
- <LI><a href="#[71]">_snputc</a> from printfa.o(i._snputc) referenced from printfa.o(i.__0snprintf)
- <LI><a href="#[71]">_snputc</a> from printfa.o(i._snputc) referenced from printfa.o(i.__0vsnprintf)
- <LI><a href="#[73]">aht21_deinit</a> from ec_bsp_aht21_driver.o(i.aht21_deinit) referenced from ec_bsp_aht21_driver.o(i.aht21_inst)
- <LI><a href="#[72]">aht21_init</a> from ec_bsp_aht21_driver.o(i.aht21_init) referenced from ec_bsp_aht21_driver.o(i.aht21_inst)
- <LI><a href="#[77]">aht21_read_humidity</a> from ec_bsp_aht21_driver.o(i.aht21_read_humidity) referenced from ec_bsp_aht21_driver.o(i.aht21_inst)
- <LI><a href="#[74]">aht21_read_id</a> from ec_bsp_aht21_driver.o(i.aht21_read_id) referenced from ec_bsp_aht21_driver.o(i.aht21_inst)
- <LI><a href="#[76]">aht21_read_temp</a> from ec_bsp_aht21_driver.o(i.aht21_read_temp) referenced from ec_bsp_aht21_driver.o(i.aht21_inst)
- <LI><a href="#[75]">aht21_read_temp_humi</a> from ec_bsp_aht21_driver.o(i.aht21_read_temp_humi) referenced from ec_bsp_aht21_driver.o(i.aht21_inst)
- <LI><a href="#[78]">aht21_sleep</a> from ec_bsp_aht21_driver.o(i.aht21_sleep) referenced from ec_bsp_aht21_driver.o(i.aht21_inst)
- <LI><a href="#[79]">aht21_wakeup</a> from ec_bsp_aht21_driver.o(i.aht21_wakeup) referenced from ec_bsp_aht21_driver.o(i.aht21_inst)
- <LI><a href="#[70]">bsp_mpuxxxx_handler_thread</a> from bsp_mpuxxxx_handler.o(i.bsp_mpuxxxx_handler_thread) referenced from freertos.o(i.MX_FREERTOS_Init)
- <LI><a href="#[70]">bsp_mpuxxxx_handler_thread</a> from bsp_mpuxxxx_handler.o(i.bsp_mpuxxxx_handler_thread) referenced from bsp_mpuxxxx_handler.o(i.bsp_mpuxxxx_handler_inst)
+ <LI><a href="#[70]">_snputc</a> from printfa.o(i._snputc) referenced from printfa.o(i.__0snprintf)
+ <LI><a href="#[70]">_snputc</a> from printfa.o(i._snputc) referenced from printfa.o(i.__0vsnprintf)
+ <LI><a href="#[72]">aht21_deinit</a> from ec_bsp_aht21_driver.o(i.aht21_deinit) referenced from ec_bsp_aht21_driver.o(i.aht21_inst)
+ <LI><a href="#[71]">aht21_init</a> from ec_bsp_aht21_driver.o(i.aht21_init) referenced from ec_bsp_aht21_driver.o(i.aht21_inst)
+ <LI><a href="#[76]">aht21_read_humidity</a> from ec_bsp_aht21_driver.o(i.aht21_read_humidity) referenced from ec_bsp_aht21_driver.o(i.aht21_inst)
+ <LI><a href="#[73]">aht21_read_id</a> from ec_bsp_aht21_driver.o(i.aht21_read_id) referenced from ec_bsp_aht21_driver.o(i.aht21_inst)
+ <LI><a href="#[75]">aht21_read_temp</a> from ec_bsp_aht21_driver.o(i.aht21_read_temp) referenced from ec_bsp_aht21_driver.o(i.aht21_inst)
+ <LI><a href="#[74]">aht21_read_temp_humi</a> from ec_bsp_aht21_driver.o(i.aht21_read_temp_humi) referenced from ec_bsp_aht21_driver.o(i.aht21_inst)
+ <LI><a href="#[77]">aht21_sleep</a> from ec_bsp_aht21_driver.o(i.aht21_sleep) referenced from ec_bsp_aht21_driver.o(i.aht21_inst)
+ <LI><a href="#[78]">aht21_wakeup</a> from ec_bsp_aht21_driver.o(i.aht21_wakeup) referenced from ec_bsp_aht21_driver.o(i.aht21_inst)
+ <LI><a href="#[79]">bsp_mpuxxxx_handler_thread</a> from bsp_mpuxxxx_handler.o(i.bsp_mpuxxxx_handler_thread) referenced from bsp_mpuxxxx_handler.o(i.bsp_mpuxxxx_handler_inst)
  <LI><a href="#[8]">delay_ms</a> from main.o(i.delay_ms) referenced 4 times from aht21_adapter.o(.data)
  <LI><a href="#[6a]">main</a> from main.o(i.main) referenced from entry9a.o(.ARM.Collect$$$$0000000B)
  <LI><a href="#[7b]">mpu_deinit</a> from bsp_mpuxxxx_driver.o(i.mpu_deinit) referenced from bsp_mpuxxxx_driver.o(i.mpuxxxx_inst)
@@ -1070,7 +1069,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> mpu6050_adapter.o(i.MPU6050_adapter_init)
 </UL>
-<P><STRONG><a name="[e0]"></a>MX_FREERTOS_Init</STRONG> (Thumb, 46 bytes, Stack size 8 bytes, freertos.o(i.MX_FREERTOS_Init))
+<P><STRONG><a name="[e0]"></a>MX_FREERTOS_Init</STRONG> (Thumb, 32 bytes, Stack size 8 bytes, freertos.o(i.MX_FREERTOS_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 192<LI>Call Chain = MX_FREERTOS_Init &rArr; osThreadNew &rArr; xTaskCreate &rArr; pvPortMalloc &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osThreadNew
@@ -1255,7 +1254,7 @@ Global Symbols
 <P><STRONG><a name="[fb]"></a>aht21_inst</STRONG> (Thumb, 124 bytes, Stack size 32 bytes, ec_bsp_aht21_driver.o(i.aht21_inst))
 <BR><BR>[Stack]<UL><LI>Max Depth = 296<LI>Call Chain = aht21_inst &rArr; aht21_init &rArr; __read_id &rArr; elog_output &rArr;  elog_output (Cycle)
 </UL>
-<BR>[Calls]<UL><LI><a href="#[72]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;aht21_init
+<BR>[Calls]<UL><LI><a href="#[71]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;aht21_init
 </UL>
 <BR>[Called By]<UL><LI><a href="#[105]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;bsp_temp_xxx_handler_init
 </UL>
@@ -1285,13 +1284,12 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[d5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MPU6050_adapter_init
 </UL>
 
-<P><STRONG><a name="[70]"></a>bsp_mpuxxxx_handler_thread</STRONG> (Thumb, 168 bytes, Stack size 40 bytes, bsp_mpuxxxx_handler.o(i.bsp_mpuxxxx_handler_thread))
+<P><STRONG><a name="[79]"></a>bsp_mpuxxxx_handler_thread</STRONG> (Thumb, 168 bytes, Stack size 40 bytes, bsp_mpuxxxx_handler.o(i.bsp_mpuxxxx_handler_thread))
 <BR><BR>[Stack]<UL><LI>Max Depth = 256<LI>Call Chain = bsp_mpuxxxx_handler_thread &rArr; elog_output &rArr;  elog_output (Cycle)
 </UL>
 <BR>[Calls]<UL><LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;elog_output
 </UL>
-<BR>[Address Reference Count : 2]<UL><LI> freertos.o(i.MX_FREERTOS_Init)
-<LI> bsp_mpuxxxx_handler.o(i.bsp_mpuxxxx_handler_inst)
+<BR>[Address Reference Count : 1]<UL><LI> bsp_mpuxxxx_handler.o(i.bsp_mpuxxxx_handler_inst)
 </UL>
 <P><STRONG><a name="[104]"></a>bsp_temp_humi_xxx_handler_inst</STRONG> (Thumb, 226 bytes, Stack size 32 bytes, ec_bsp_temp_humi_handler.o(i.bsp_temp_humi_xxx_handler_inst))
 <BR><BR>[Stack]<UL><LI>Max Depth = 360<LI>Call Chain = bsp_temp_humi_xxx_handler_inst &rArr; bsp_temp_xxx_handler_init &rArr; aht21_inst &rArr; aht21_init &rArr; __read_id &rArr; elog_output &rArr;  elog_output (Cycle)
@@ -1341,9 +1339,9 @@ Global Symbols
 <LI>Call Chain = elog_get_filter_tag_lvl &rArr;  elog_output (Cycle)
 </UL>
 <BR>[Calls]<UL><LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;elog_output
+<LI><a href="#[109]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;strncmp
 <LI><a href="#[10a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;elog_output_unlock
 <LI><a href="#[108]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;elog_output_lock
-<LI><a href="#[109]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;strncmp
 </UL>
 <BR>[Called By]<UL><LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;elog_output
 </UL>
@@ -1390,7 +1388,7 @@ Global Symbols
 <LI><a href="#[101]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;elog_start
 <LI><a href="#[ff]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;elog_set_text_color_enabled
 <LI><a href="#[100]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;elog_set_fmt
-<LI><a href="#[70]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;bsp_mpuxxxx_handler_thread
+<LI><a href="#[79]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;bsp_mpuxxxx_handler_thread
 <LI><a href="#[d7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;bsp_mpuxxxx_handler_inst
 <LI><a href="#[102]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;bsp_mpu_handler_init
 <LI><a href="#[103]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mpuxxxx_inst
@@ -1411,7 +1409,7 @@ Global Symbols
 <LI><a href="#[6e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;temp_humi_handler_thread
 <LI><a href="#[104]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;bsp_temp_humi_xxx_handler_inst
 <LI><a href="#[105]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;bsp_temp_xxx_handler_init
-<LI><a href="#[72]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;aht21_init
+<LI><a href="#[71]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;aht21_init
 <LI><a href="#[f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__read_id
 <LI><a href="#[6d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MPU6050_data_callback
 <LI><a href="#[26]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MPU_os_thread_create
@@ -2170,13 +2168,13 @@ Local Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;elog_output
 </UL>
-<BR>[Called By]<UL><LI><a href="#[72]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;aht21_init
+<BR>[Called By]<UL><LI><a href="#[71]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;aht21_init
 </UL>
 
-<P><STRONG><a name="[73]"></a>aht21_deinit</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, ec_bsp_aht21_driver.o(i.aht21_deinit))
+<P><STRONG><a name="[72]"></a>aht21_deinit</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, ec_bsp_aht21_driver.o(i.aht21_deinit))
 <BR>[Address Reference Count : 1]<UL><LI> ec_bsp_aht21_driver.o(i.aht21_inst)
 </UL>
-<P><STRONG><a name="[72]"></a>aht21_init</STRONG> (Thumb, 156 bytes, Stack size 24 bytes, ec_bsp_aht21_driver.o(i.aht21_init))
+<P><STRONG><a name="[71]"></a>aht21_init</STRONG> (Thumb, 156 bytes, Stack size 24 bytes, ec_bsp_aht21_driver.o(i.aht21_init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 264<LI>Call Chain = aht21_init &rArr; __read_id &rArr; elog_output &rArr;  elog_output (Cycle)
 </UL>
 <BR>[Calls]<UL><LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;elog_output
@@ -2186,43 +2184,43 @@ Local Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> ec_bsp_aht21_driver.o(i.aht21_inst)
 </UL>
-<P><STRONG><a name="[77]"></a>aht21_read_humidity</STRONG> (Thumb, 26 bytes, Stack size 16 bytes, ec_bsp_aht21_driver.o(i.aht21_read_humidity))
+<P><STRONG><a name="[76]"></a>aht21_read_humidity</STRONG> (Thumb, 26 bytes, Stack size 16 bytes, ec_bsp_aht21_driver.o(i.aht21_read_humidity))
 <BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = aht21_read_humidity &rArr; aht21_read_temp_humi &rArr; aht21_read_status
 </UL>
-<BR>[Calls]<UL><LI><a href="#[75]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;aht21_read_temp_humi
+<BR>[Calls]<UL><LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;aht21_read_temp_humi
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> ec_bsp_aht21_driver.o(i.aht21_inst)
 </UL>
-<P><STRONG><a name="[74]"></a>aht21_read_id</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, ec_bsp_aht21_driver.o(i.aht21_read_id))
+<P><STRONG><a name="[73]"></a>aht21_read_id</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, ec_bsp_aht21_driver.o(i.aht21_read_id))
 <BR>[Address Reference Count : 1]<UL><LI> ec_bsp_aht21_driver.o(i.aht21_inst)
 </UL>
 <P><STRONG><a name="[fc]"></a>aht21_read_status</STRONG> (Thumb, 92 bytes, Stack size 16 bytes, ec_bsp_aht21_driver.o(i.aht21_read_status))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = aht21_read_status
 </UL>
-<BR>[Called By]<UL><LI><a href="#[75]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;aht21_read_temp_humi
+<BR>[Called By]<UL><LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;aht21_read_temp_humi
 </UL>
 
-<P><STRONG><a name="[76]"></a>aht21_read_temp</STRONG> (Thumb, 26 bytes, Stack size 16 bytes, ec_bsp_aht21_driver.o(i.aht21_read_temp))
+<P><STRONG><a name="[75]"></a>aht21_read_temp</STRONG> (Thumb, 26 bytes, Stack size 16 bytes, ec_bsp_aht21_driver.o(i.aht21_read_temp))
 <BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = aht21_read_temp &rArr; aht21_read_temp_humi &rArr; aht21_read_status
 </UL>
-<BR>[Calls]<UL><LI><a href="#[75]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;aht21_read_temp_humi
+<BR>[Calls]<UL><LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;aht21_read_temp_humi
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> ec_bsp_aht21_driver.o(i.aht21_inst)
 </UL>
-<P><STRONG><a name="[75]"></a>aht21_read_temp_humi</STRONG> (Thumb, 574 bytes, Stack size 56 bytes, ec_bsp_aht21_driver.o(i.aht21_read_temp_humi))
+<P><STRONG><a name="[74]"></a>aht21_read_temp_humi</STRONG> (Thumb, 574 bytes, Stack size 56 bytes, ec_bsp_aht21_driver.o(i.aht21_read_temp_humi))
 <BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = aht21_read_temp_humi &rArr; aht21_read_status
 </UL>
 <BR>[Calls]<UL><LI><a href="#[fc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;aht21_read_status
 </UL>
-<BR>[Called By]<UL><LI><a href="#[76]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;aht21_read_temp
-<LI><a href="#[77]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;aht21_read_humidity
+<BR>[Called By]<UL><LI><a href="#[75]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;aht21_read_temp
+<LI><a href="#[76]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;aht21_read_humidity
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> ec_bsp_aht21_driver.o(i.aht21_inst)
 </UL>
-<P><STRONG><a name="[78]"></a>aht21_sleep</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, ec_bsp_aht21_driver.o(i.aht21_sleep))
+<P><STRONG><a name="[77]"></a>aht21_sleep</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, ec_bsp_aht21_driver.o(i.aht21_sleep))
 <BR>[Address Reference Count : 1]<UL><LI> ec_bsp_aht21_driver.o(i.aht21_inst)
 </UL>
-<P><STRONG><a name="[79]"></a>aht21_wakeup</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, ec_bsp_aht21_driver.o(i.aht21_wakeup))
+<P><STRONG><a name="[78]"></a>aht21_wakeup</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, ec_bsp_aht21_driver.o(i.aht21_wakeup))
 <BR>[Address Reference Count : 1]<UL><LI> ec_bsp_aht21_driver.o(i.aht21_inst)
 </UL>
 <P><STRONG><a name="[105]"></a>bsp_temp_xxx_handler_init</STRONG> (Thumb, 136 bytes, Stack size 32 bytes, ec_bsp_temp_humi_handler.o(i.bsp_temp_xxx_handler_init))
@@ -2837,7 +2835,7 @@ Local Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_core
 </UL>
 
-<P><STRONG><a name="[71]"></a>_snputc</STRONG> (Thumb, 22 bytes, Stack size 0 bytes, printfa.o(i._snputc))
+<P><STRONG><a name="[70]"></a>_snputc</STRONG> (Thumb, 22 bytes, Stack size 0 bytes, printfa.o(i._snputc))
 <BR>[Address Reference Count : 2]<UL><LI> printfa.o(i.__0snprintf)
 <LI> printfa.o(i.__0vsnprintf)
 </UL><P>

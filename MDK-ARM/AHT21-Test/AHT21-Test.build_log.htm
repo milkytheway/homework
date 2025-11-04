@@ -27,47 +27,12 @@ Project File Date:  10/31/2025
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Keil_v5\ARM\ARM-COMPILER-506\Bin'
 Build target 'AHT21-Test'
-compiling bsp_mpuxxxx_driver.c...
-..\Bsp\MPU6050\driver\bsp_mpuxxxx_driver.c(260): warning:  #188-D: enumerated type mixed with another type
-      status = p_iic->pf_iic_write_reg(p_bus, MPU_ADDR, MPU_PWR_MGMT1_REG, MPU_PWR1_DEVICE_RESET);
-..\Bsp\MPU6050\driver\bsp_mpuxxxx_driver.c(280): warning:  #188-D: enumerated type mixed with another type
-      status = p_iic->pf_iic_write_reg(p_bus, MPU_ADDR, MPU_PWR_MGMT1_REG, 0x01);
-..\Bsp\MPU6050\driver\bsp_mpuxxxx_driver.c(296): warning:  #188-D: enumerated type mixed with another type
-      status = p_iic->pf_iic_write_reg(p_bus, MPU_ADDR, MPU_INT_EN_REG, 0x00);
-..\Bsp\MPU6050\driver\bsp_mpuxxxx_driver.c(308): warning:  #188-D: enumerated type mixed with another type
-      status = p_iic->pf_iic_write_reg(p_bus, MPU_ADDR, MPU_USER_CTRL_REG, 0x00);
-..\Bsp\MPU6050\driver\bsp_mpuxxxx_driver.c(317): warning:  #188-D: enumerated type mixed with another type
-      status = p_iic->pf_iic_write_reg(p_bus, MPU_ADDR, MPU_FIFO_EN_REG, 0x00);
-..\Bsp\MPU6050\driver\bsp_mpuxxxx_driver.c(336): warning:  #188-D: enumerated type mixed with another type
-      status = p_iic->pf_iic_write_reg(p_bus, MPU_ADDR, MPU_INTBP_CFG_REG, 0xB0);
-..\Bsp\MPU6050\driver\bsp_mpuxxxx_driver.c(415): warning:  #188-D: enumerated type mixed with another type
-      status = p_iic->pf_iic_write_reg(p_bus, MPU_ADDR, MPU_INT_EN_REG, MPU_INT_DATA_RDY_EN);
-..\Bsp\MPU6050\driver\bsp_mpuxxxx_driver.c(519): warning:  #188-D: enumerated type mixed with another type
-      status = p_iic->pf_iic_write_reg(p_bus, MPU_ADDR, MPU_GYRO_CFG_REG, reg_value);
-..\Bsp\MPU6050\driver\bsp_mpuxxxx_driver.c(597): warning:  #188-D: enumerated type mixed with another type
-      status = p_iic->pf_iic_write_reg(p_bus, MPU_ADDR, MPU_ACCEL_CFG_REG, reg_value);
-..\Bsp\MPU6050\driver\bsp_mpuxxxx_driver.c(674): warning:  #188-D: enumerated type mixed with another type
-      status = p_iic->pf_iic_write_reg(p_bus, MPU_ADDR, MPU_CFG_REG, reg_value);
-..\Bsp\MPU6050\driver\bsp_mpuxxxx_driver.c(767): warning:  #188-D: enumerated type mixed with another type
-      status = p_iic->pf_iic_write_reg(p_bus, MPU_ADDR, MPU_SAMPLE_RATE_REG, smplrt_div);
-..\Bsp\MPU6050\driver\bsp_mpuxxxx_driver.c(871): warning:  #188-D: enumerated type mixed with another type
-      status = p_iic->pf_iic_read_multi_byte(p_bus, MPU_ADDR, MPU_ACCEL_XOUTH_REG, 6, buffer);
-..\Bsp\MPU6050\driver\bsp_mpuxxxx_driver.c(1004): warning:  #188-D: enumerated type mixed with another type
-      status = p_iic->pf_iic_read_multi_byte(p_bus, MPU_ADDR, MPU_GYRO_XOUTH_REG, 6, buffer);
-..\Bsp\MPU6050\driver\bsp_mpuxxxx_driver.c(1137): warning:  #188-D: enumerated type mixed with another type
-      status = p_iic->pf_iic_read_multi_byte(p_bus, MPU_ADDR, MPU_TEMP_OUTH_REG, 2, buffer);
-..\Bsp\MPU6050\driver\bsp_mpuxxxx_driver.c(1286): warning:  #188-D: enumerated type mixed with another type
-      status = p_iic->pf_iic_read_multi_byte(p_bus, MPU_ADDR, MPU_ACCEL_XOUTH_REG, 14, buffer);
-..\Bsp\MPU6050\driver\bsp_mpuxxxx_driver.c(1422): warning:  #188-D: enumerated type mixed with another type
-      status = p_iic->pf_iic_write_reg(p_bus, MPU_ADDR, MPU_PWR_MGMT1_REG, 0x01);
-..\Bsp\MPU6050\driver\bsp_mpuxxxx_driver.c(1516): warning:  #188-D: enumerated type mixed with another type
-      status = p_iic->pf_iic_write_reg(p_bus, MPU_ADDR, MPU_PWR_MGMT1_REG, 0x40);
-..\Bsp\MPU6050\driver\bsp_mpuxxxx_driver.c: 17 warnings, 0 errors
 compiling freertos.c...
+compiling MPU6050_adapter.c...
 linking...
-Program Size: Code=39312 RO-data=1756 RW-data=488 ZI-data=22544  
+Program Size: Code=39280 RO-data=1708 RW-data=484 ZI-data=22548  
 FromELF: creating hex file...
-"AHT21-Test\AHT21-Test.axf" - 0 Error(s), 17 Warning(s).
+"AHT21-Test\AHT21-Test.axf" - 0 Error(s), 0 Warning(s).
 
 <h2>Software Packages used:</h2>
 

@@ -49,7 +49,6 @@
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
 extern temp_humi_handler_all_input_arg_t input_args;
-extern mpu_handler_all_input_arg_t mpu_input_args;
 /* USER CODE END Variables */
 /* Definitions for HandlerTask */
 osThreadId_t HandlerTaskHandle;
@@ -65,13 +64,7 @@ const osThreadAttr_t userTask_attributes = {
   .stack_size = 128 * 6,
   .priority = (osPriority_t) osPriorityBelowNormal,
 };
-/* Definitions for mpu_user */
-osThreadId_t mpu_userHandle;
-const osThreadAttr_t mpu_user_attributes = {
-  .name = "mpu_user",
-  .stack_size = 128 * 6,
-  .priority = (osPriority_t) osPriorityNormal1,
-};
+
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -116,9 +109,6 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of userTask */
   userTaskHandle = osThreadNew(userTaskFunction, NULL, &userTask_attributes);
-
-  /* creation of mpu_user */
-  mpu_userHandle = osThreadNew(bsp_mpuxxxx_handler_thread, (void *)&mpu_input_args, &mpu_user_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -176,24 +166,6 @@ void userTaskFunction(void *argument)
     osDelay(200);
   }
   /* USER CODE END userTaskFunction */
-}
-
-/* USER CODE BEGIN Header_bsp_mpuxxxx_handler_thread */
-/**
-* @brief Function implementing the mpu_user thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_bsp_mpuxxxx_handler_thread */
-__weak void bsp_mpuxxxx_handler_thread(void *argument)
-{
-  /* USER CODE BEGIN bsp_mpuxxxx_handler_thread */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END bsp_mpuxxxx_handler_thread */
 }
 
 /* Private application code --------------------------------------------------*/
